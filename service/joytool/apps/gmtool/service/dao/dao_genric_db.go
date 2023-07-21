@@ -103,9 +103,6 @@ func (fd *fileDb[Elem]) StoreOrReplace(data *Elem, unionName ...any) (*DbRowData
 	return fd.storeOrReplace(data, unionName...)
 }
 func (fd *fileDb[Elem]) storeOrReplace(data *Elem, unionName ...any) (*DbRowData[Elem], bool) {
-	fd.locker.Lock()
-	defer fd.locker.Unlock()
-
 	name := fd.joinName(unionName...)
 	oldData, find := fd.allData[name]
 	if find {

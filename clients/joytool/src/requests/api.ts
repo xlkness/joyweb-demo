@@ -51,8 +51,8 @@ userService.interceptors.response.use((res)=>{
 
     return res.data
 }, (err)=>{
-    const code:number = err.response.status
-    const message: string = err.response.data.message || ""
+    const code:number = err.response && err.response.status || -1
+    const message: string = err.response && err.response.data.message || err
     ElMessageBox.alert(message, "请求服务器返回http错误码-" + code, {
         type: "error",
         confirmButtonText: '知道了',
@@ -84,9 +84,9 @@ gmtoolService.interceptors.response.use((res)=>{
 
     return res.data
 }, (err)=>{
-    // console.log("err", err)
-    const code:number = err.response.status
-    const message: string = err.response.data.message || ""
+    console.log("err", err)
+    const code:number = err.response && err.response.status || -1
+    const message: string = err.response && err.response.data.message || err
     ElMessageBox.alert(message, "请求服务器返回http错误码-" + code, {
         type: "error",
         confirmButtonText: '知道了',

@@ -6,15 +6,15 @@
       </el-header>
       <el-main>
         <el-table :data="envList" :default-sort="{prop:'index', order: 'ascending'}"  table-layout="auto" stripe style="width: 98vh;height: 60vh">
-          <el-table-column fixed prop="index" label="序 号" width="250">
+          <el-table-column prop="index" label="序 号">
           </el-table-column>
-          <el-table-column fixed prop="name" label="名 字" width="150">
+          <el-table-column prop="name" label="名 字">
           </el-table-column>
-          <el-table-column fixed prop="desc" label="描 述" width="250">
+          <el-table-column prop="desc" label="描 述">
           </el-table-column>
-          <el-table-column fixed prop="created_at" label="创建时间" width="260">
+          <el-table-column prop="created_at" label="创建时间">
           </el-table-column>
-          <el-table-column fixed prop="func" label="功 能">
+          <el-table-column prop="func" label="功 能">
             <template #default="scope">
               <el-button @click="handleEdit('operation', scope.$index, scope.row)" size="large" type="success">
                 <el-icon style="vertical-align: middle">

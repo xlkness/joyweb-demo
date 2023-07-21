@@ -28,7 +28,18 @@
       </el-table-column>
       <el-table-column prop="history.exec_res" label="执行结果">
         <template #default="scope">
-          <el-input v-model="scope.row.history.exec_res" :autosize="{minRows: 1, maxRows: 6}" type="textarea" placeholder="执行结果"></el-input>
+          <el-popover
+              placement="right-start"
+              title="执行结果"
+              :width="200"
+              trigger="hover"
+              :content="scope.row.history.exec_res"
+          >
+            <template #reference>
+              <el-button type="textarea">...</el-button>
+            </template>
+          </el-popover>
+          <!-- <el-input v-model="scope.row.history.exec_res" :autosize="{minRows: 1, maxRows: 6}" type="textarea"></el-input> -->
         </template>
       </el-table-column>
       <el-table-column prop="history.request_info.date" label="执行时间">
@@ -39,7 +50,7 @@
             <el-icon style="vertical-align: middle">
               <Operation/>
             </el-icon>
-            <span>再次执行</span>
+            <span>执行</span>
           </el-button>
           <el-button @click="handleLike(scope.$index, scope.row)" type="success" size="large">
             <el-icon style="vertical-align: middle">
@@ -152,8 +163,8 @@ export default defineComponent({
     }
 
     const handleDeleteExecHistory = (index, row) => {
-      console.log(row)
-      deleteExecHistory({project: project, name: row.cmdServer.name, index: row.index}).then((res) => {
+      console.log(index, row)
+      deleteExecHistory({project: project, name: row.cmdServer.name, index: index}).then((res) => {
         ElNotification({
           title: "删除结果通知",
           message: "删除历史[" + row.index + "]成功！",

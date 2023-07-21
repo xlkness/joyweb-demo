@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-scrollbar max-height="45vh">
+    <el-scrollbar max-height="40vh">
       <el-form
           ref="commandFormRef"
           :model="commandFormData"

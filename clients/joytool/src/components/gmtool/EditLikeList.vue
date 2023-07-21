@@ -22,9 +22,20 @@
               </el-table-column>
               <el-table-column prop="command.user" label="用户">
               </el-table-column>
-              <el-table-column prop="command.base_req_params.fields" label="参数" width="250">
+              <el-table-column prop="command.base_req_params.fields" label="参数">
                 <template #default="scope">
-                  <el-input :autosize="{minRows: 2, maxRows: 6}" type="textarea" :placeholder="JSON.stringify(scope.row.command.base_req_params.fields)"></el-input>
+                  <el-popover
+                      placement="right-start"
+                      title="参数"
+                      :width="200"
+                      trigger="hover"
+                      :content="JSON.stringify(scope.row.command.base_req_params.fields)"
+                  >
+                    <template #reference>
+                      <el-button type="textarea">...</el-button>
+                    </template>
+                  </el-popover>
+                  <!-- <el-input :autosize="{minRows: 2, maxRows: 6}" type="textarea" :placeholder="JSON.stringify(scope.row.command.base_req_params.fields)"></el-input> -->
                 </template>
               </el-table-column>
               <el-table-column prop="command.date" label="创建时间" width="150">
@@ -125,7 +136,7 @@ export default defineComponent({
     }
 
     const handleDislike = (index, row, childIndex, childRow) => {
-      console.log('click', index, row, childIndex, childRow, likeRecordList.value)
+      // console.log('click', index, row, childIndex, childRow, likeRecordList.value)
       dislikeCommand({project: project, id: String(childRow.id)}).then((res) => {
         ElNotification({
           title: "取消收藏通知",

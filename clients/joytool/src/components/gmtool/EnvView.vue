@@ -1,14 +1,14 @@
 <template>
   <div style="height: 100%;width:100%">
     <!--  展示指令服务器列表  -->
-    <el-table :data="gmServerTableData" style="width: 100vh;min-height: 10vh;" size="large" stripe="true">
-      <el-table-column fixed prop="name" label="指令服务器" width="150">
+    <el-table :data="gmServerTableData" table-layout="auto" style="width: 100vh;min-height: 10vh;" size="large" stripe="true">
+      <el-table-column prop="name" label="指令服务器">
       </el-table-column>
-      <el-table-column fixed prop="desc" label="描 述" width="250">
+      <el-table-column prop="desc" label="描 述">
       </el-table-column>
-      <el-table-column fixed prop="addr" label="地 址" width="250">
+      <el-table-column prop="addr" label="地 址">
       </el-table-column>
-      <el-table-column fixed prop="func" label="功 能">
+      <el-table-column prop="func" label="功 能">
         <template #default="scope">
           <el-button @click="handleOperation('operation', scope.$index, scope.row)" size="large" type="success">
             <el-icon style="vertical-align: middle">
@@ -55,12 +55,23 @@
         </el-table-column>
         <el-table-column prop="command.user" label="用户">
         </el-table-column>
-        <el-table-column prop="command.base_req_params.fields" label="参数" width="250">
+        <el-table-column prop="command.base_req_params.fields" label="参数">
           <template #default="scope">
-            <el-input :autosize="{minRows: 2, maxRows: 6}" type="textarea" :placeholder="JSON.stringify(scope.row.command.base_req_params.fields)"></el-input>
+            <el-popover
+                placement="right-start"
+                title="参数"
+                :width="100"
+                trigger="hover"
+                :content="JSON.stringify(scope.row.command.base_req_params.fields)"
+            >
+              <template #reference>
+                <el-button type="textarea">...</el-button>
+              </template>
+            </el-popover>
+            <!-- <el-input :autosize="{minRows: 2, maxRows: 6}" type="textarea" :placeholder="JSON.stringify(scope.row.command.base_req_params.fields)"></el-input> -->
           </template>
         </el-table-column>
-        <el-table-column prop="command.date" label="创建时间" width="150">
+        <el-table-column prop="command.date" label="创建时间">
         </el-table-column>
         <el-table-column>
           <template #default="scope">
@@ -85,7 +96,7 @@
       <template #header>
         <span style="font-size: 40px">{{curEnv}}/{{dialogData.gmServerData.name}}/执行历史列表</span>
       </template>
-      <el-table :data="dialogData.historyRecordList" style="width: 100%;height: 60vh" table-layout="auto" stripe>
+      <el-table :data="dialogData.historyRecordList" size="small" style="width: 100%;height: 57vh" table-layout="auto" stripe>
         <el-table-column prop="request_info.env" label="环境">
         </el-table-column>
         <el-table-column prop="request_info.command_server_name" label="指令服">
@@ -94,7 +105,7 @@
         </el-table-column>
         <el-table-column prop="request_info.user" label="用户">
         </el-table-column>
-        <el-table-column label="参数" width="80">
+        <el-table-column label="参数">
           <template #default="scope">
             <el-popover
                 placement="right-start"
@@ -113,7 +124,18 @@
         </el-table-column>
         <el-table-column prop="exec_res" label="执行结果">
           <template #default="scope">
-            <el-input v-model="scope.row.exec_res" :autosize="{minRows: 1, maxRows: 6}" type="textarea" placeholder="执行结果"></el-input>
+            <el-popover
+                placement="right-start"
+                title="执行结果"
+                :width="100"
+                trigger="hover"
+                :content="scope.row.exec_res"
+            >
+              <template #reference>
+                <el-button type="textarea">...</el-button>
+              </template>
+            </el-popover>
+            <!-- <el-input v-model="scope.row.exec_res" :autosize="{minRows: 1, maxRows: 6}" type="textarea" placeholder="执行结果"></el-input> -->
           </template>
         </el-table-column>
         <el-table-column prop="request_info.date" label="执行时间">
@@ -124,7 +146,7 @@
               <el-icon style="vertical-align: middle">
                 <Operation/>
               </el-icon>
-              <span>再次执行</span>
+              <span>执行</span>
             </el-button>
             <el-button @click="handleLike(scope.$index, scope.row)" type="success" size="large">
               <el-icon style="vertical-align: middle">

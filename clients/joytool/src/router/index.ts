@@ -1,14 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import ListView from "@/views/gmtool/ListView.vue";
-import EditCmdServerView from "@/views/gmtool/EditCmdServerView.vue";
 import UserView from "@/views/user/UserView.vue";
-import EditEnv from "@/views/gmtool/EditEnv.vue";
-import ProHome from "@/views/gmtool/ProHome.vue";
 import LoginView from "@/views/LoginView.vue";
 import NewHomeView from "@/views/NewHomeView.vue";
-import {User} from "@element-plus/icons-vue";
-import ProjectSelectView from "@/views/gmtool/ProjectSelectView.vue";
 import GMToolHomeView from "@/views/gmtool/GMToolHomeView.vue";
 import GMToolMenuItem from "@/views/gmtool/GMToolMenuItem.vue";
 

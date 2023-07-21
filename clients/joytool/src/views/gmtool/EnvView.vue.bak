@@ -1,0 +1,115 @@
+<template>
+  <div>
+    <!--  展示指令服务器列表  -->
+    <el-table :data="gmServerTableData" style="width: 100%">
+      <el-table-column fixed prop="name" label="指令服务器" width="150">
+      </el-table-column>
+      <el-table-column fixed prop="desc" label="描 述" width="250">
+      </el-table-column>
+      <el-table-column fixed prop="addr" label="地 址" width="250">
+      </el-table-column>
+      <el-table-column fixed prop="func" label="功 能">
+        <template #default="scope">
+          <el-button @click="handleOperation('operation', scope.$index, scope.row)">
+            <el-icon style="vertical-align: middle">
+              <Operation/>
+            </el-icon>
+            <span>指令列表</span>
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <!--  点击某个服务器执行列表展示后出现的弹窗  -->
+    <el-dialog v-model="dialogData.operVisible" title="gm指令操作列表" modal="true">
+      <component :is="cmdServerComponent" :commandserver="dialogData.gmServerData" :commandlist="dialogData.commandlist"></component>
+    </el-dialog>
+  </div>
+</template>
+
+<script lang="ts">
+import {defineComponent, defineProps, reactive, ref} from "vue";
+import {useRoute, useRouter} from "vue-router";
+import {Operation} from "@element-plus/icons-vue";
+import * as http from "http";
+import {jsonp} from "vue-jsonp";
+import {LoginData} from "@/types/Login";
+import {execCmdServerCommand, gmtool, login, queryCmdServerCommandList} from "@/requests/api";
+import {FormInstance, FormRules} from "element-plus";
+import LocalCache from "@/stores/localCache";
+import CmdServer from "@/components/gmtool/CmdServer.vue";
+
+export default defineComponent({
+  components: {Operation},
+  props: ['curEnv', 'allCommandServerList', 'allEnvList'],
+  setup(props) {
+    // console.log("all comd server list", props.allCommandServerList)
+    // console.log("all env list", props.allEnvList)
+
+    const curEnv = props.curEnv
+    const allCommandServerList = props.allCommandServerList
+    const allEnvs = props.allEnvList
+    const gmServerTableData = ref([])
+
+    // 初始化指令服务器列表
+    for (let i=0; i < allCommandServerList.length; i++) {
+      for (let j=0; j < allCommandServerList[i].envs.length; j++) {
+        if (curEnv == allCommandServerList[i].envs[j]) {
+          gmServerTableData.value.push({
+            "name": allCommandServerList[i].name,
+            "addr": allCommandServerList[i].addr,
+            "desc": allCommandServerList[i].desc,
+            "detail": allCommandServerList[i],
+          })
+        }
+      }
+    }
+
+    const dialogData = ref({
+      operVisible: false,
+      gmServerData: {},
+      commandlist: null,
+    })
+
+    const allDisable = () => {
+      dialogData.value.operVisible = false
+    }
+    const operEnable = () => {
+      dialogData.value.operVisible = true
+    }
+
+    const handleOperation = (oper: string, index: number, row: Object) => {
+      dialogData.value.gmServerData=row
+
+      switch (oper) {
+        case "operation":
+          queryCmdServerCommandList({command_server_name: row.detail.name}).then((res)=> {
+            // console.log('jsonp res:', res)
+            dialogData.value.commandlist = res.payload
+            operEnable()
+          }, (err)=>{
+            console.log("queryCmdServerCommandList error:", err)
+          })
+          // const url = "http://" + row.addr + `/commandlist?format=jsonp&` + `gm_id=` + `likun`
+          // jsonp(url, {format: 'jsonp'}).then((res)=> {
+          //
+          // })
+          break;
+      }
+      // console.log("点击操作：", oper, ",索引：", index, ",行数据：", row.name, row.addr, row.desc)
+    }
+
+    const handleClose = (done: ()=>void) => {
+      allDisable()
+    }
+
+    const cmdServerComponent = CmdServer
+
+    return {gmServerTableData, handleOperation, handleClose, dialogData, cmdServerComponent}
+  }
+})
+</script>
+
+<style scoped>
+
+</style>

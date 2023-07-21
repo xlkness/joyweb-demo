@@ -1,0 +1,82 @@
+<template>
+  <div>
+        <el-tabs v-model="envTabsValue" type="border-card" class="env-tabs">
+          <el-tab-pane class="env-tabs-pane"
+              v-for="item in envTabs"
+              :key="item.name"
+              :label="item.title"
+              :name="item.name"
+          >
+            <component :is="item.content" :curEnv="item.name" :allCommandServerList="item.allCommandServerList" :allEnvList="item.allEnvList"></component>
+<!--            {{item.content}}-->
+          </el-tab-pane>
+        </el-tabs>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent, ref, onMounted } from "vue";
+import {gmtool} from '../../requests/api';
+import {TabsPaneContext} from "element-plus";
+import EnvView from "@/views/gmtool/EnvView.vue";
+import {useRouter} from "vue-router";
+import {Operation} from "@element-plus/icons-vue";
+
+export default defineComponent({
+  components: {Operation},
+  setup() {
+    var router=useRouter()
+
+    var envTabs = ref([])
+    var envTabsValue = ref('0')
+
+    gmtool().then((res)=> {
+      // 获取到gmtool信息，刷新页面
+      var commandServerList = res.payload.command_server_list
+      var envList = res.payload.env_list || []
+
+      for (let i=0; i<envList.length; i++) {
+        envTabs.value.push({
+          "title": String(envList[i].name),
+          "name": String(envList[i].name),
+          "content": "Envview",
+          "allCommandServerList": commandServerList,
+          "allEnvList": envList,
+        })
+      }
+
+      if (envList.length > 0) {
+        envTabsValue.value = envList[0].name
+      }
+
+      // console.log("commandServerList", commandServerList, envList)
+    }, (err) => {
+      console.log("request error:", err)
+    })
+
+    const handleClick = (tab: TabsPaneContext, envent: Event) => {
+
+    }
+
+    return {envTabs, envTabsValue, EnvView, handleClick}
+  }
+})
+</script>
+
+<style>
+.el-tabs--border-card > .el-tabs__content {
+  padding: 32px;
+  color: #6b778c;
+  /*background-color: aqua;*/
+  /*color: #42b983;*/
+  font-size: 20px;
+  font-weight: 600;
+}
+.el-tabs--border-card .el-tabs__header {
+  height: auto;
+}
+.el-tabs--border-card .el-tabs__item {
+  font-size: 20px;
+  height: auto;
+}
+</style>

@@ -1,0 +1,7 @@
+{"service":"___go_build_joytool_cmd_all_in_one","node_id":"FoNZj9E","log_level":"notice","log_time":"23/07/04 13:38:47.167","caller":"internal/application/app.go:116","message":"app gmtool server gm管理系统服务器 will listen on :"}
+{"service":"___go_build_joytool_cmd_all_in_one","node_id":"FoNZj9E","log_level":"notice","log_time":"23/07/04 13:38:47.167","caller":"internal/application/app.go:116","message":"app user server gm管理系统服务器 will listen on :"}
+{"service":"___go_build_joytool_cmd_all_in_one","node_id":"FoNZj9E","log_level":"notice","log_time":"23/07/04 13:38:47.167","caller":"internal/application/scheduler.go:82","message":"trace server listen on::7788"}
+{"service":"___go_build_joytool_cmd_all_in_one","node_id":"FoNZj9E","log_level":"notice","log_time":"23/07/04 13:38:47.167","caller":"internal/application/scheduler.go:95","message":"application receive signal(interrupt), will graceful stop"}
+{"service":"___go_build_joytool_cmd_all_in_one","node_id":"ZPMDC8a","log_level":"notice","log_time":"23/07/04 13:40:09.533","caller":"internal/application/app.go:116","message":"app gmtool server gm管理系统服务器 will listen on :"}
+{"service":"___go_build_joytool_cmd_all_in_one","node_id":"ZPMDC8a","log_level":"notice","log_time":"23/07/04 13:40:09.533","caller":"internal/application/scheduler.go:82","message":"trace server listen on::7788"}
+{"service":"___go_build_joytool_cmd_all_in_one","node_id":"ZPMDC8a","log_level":"notice","log_time":"23/07/04 13:40:09.533","caller":"internal/application/app.go:116","message":"app user server gm管理系统服务器 will listen on :"}

@@ -1,0 +1,140 @@
+<template>
+  <div class="home">
+    <el-container>
+      <el-header>
+        <el-row :gutter="20">
+          <el-col :span="4"><div class="grid-content ep-bg-purple" >放logo</div></el-col>
+          <el-col :span="16"><div class="grid-content ep-bg-purple" ><h2>创乐汇后台工具管理系统</h2></div></el-col>
+          <el-col :span="4"><div class="grid-content ep-bg-purple" >放头像、登出等</div></el-col>
+        </el-row>
+      </el-header>
+      <el-container>
+        <el-aside>
+          <el-menu
+              active-text-color="#ffd04b"
+              background-color="#545c64"
+              default-active="activeIndex"
+              text-color="#fff"
+              router
+              v-for="(routeItem, idx) in newRouteList"
+          >
+            <!--router开启路由模式，通过el-mune-item index来进行跳转-->
+            <el-sub-menu class="sub-menu" index="gmtool" v-if="(routeItem.children && routeItem.children.length > 0)">
+              <template #title>
+                <el-icon><location></location></el-icon>
+                <span>{{routeItem.meta.name}}</span>
+              </template>
+              <el-menu-item-group index="gmtool-group" v-for="routeItemChildren in routeItem.children">
+                <el-menu-item :index="routeItemChildren.path" title="routeItemChildren.meta.name" @click="handleClickMenuItem(routeItemChildren.children)">
+                  <el-icon>
+                    <component class="el-icon" :is="routeItemChildren.meta.icon"></component>
+                  </el-icon>
+                  <span>{{routeItemChildren.meta.name}}</span>
+                </el-menu-item>
+              </el-menu-item-group>
+            </el-sub-menu>
+            <el-menu-item class="sub-menu" :index="routeItem.path" v-else>
+              <el-icon>
+                <component class="el-icon" :is="routeItem.meta.icon"></component>
+              </el-icon>
+              <span>{{routeItem.name}}</span>
+            </el-menu-item>
+          </el-menu>
+        </el-aside>
+        <el-main>
+          <router-view :functionList="functionList"></router-view>
+        </el-main>
+      </el-container>
+    </el-container>
+  </div>
+</template>
+
+<script lang="ts">
+import {defineComponent, onMounted, ref} from 'vue';
+import {useRouter} from "vue-router";
+import {gmtool} from '../requests/api';
+import {homeRoutes} from '../router/index';
+
+import LocalCache from "@/stores/localCache";
+import RouteRecordRaw  from 'vue-router';
+
+export default defineComponent({
+  name: 'HomeView',
+  components: {
+
+  },
+  setup(){
+    // onMounted(()=> {
+    //   gmtool().then((res)=>{
+    //     // 获取到gmtool信息，刷新页面
+    //     var commands = res.payload.commands
+    //     var envs = res.payload.envs
+    //
+    //   })
+    // });
+    const router=useRouter()
+    // 获取元数据要展示的路由
+    const routeList=homeRoutes.children
+    console.log('routeeeeeeeeeee list', routeList)
+    const newRouteList = routeList
+
+    // 判断用户是否有权限展示路由
+    // const modulesPermissions = LocalCache.getCache('modules_permissions').modules
+    // for (let i=0; i < modulesPermissions.length; i++) {
+    //   for (let j=0; j < routeList.length; j++) {
+    //     if (routeList[j].name == modulesPermissions[i].name) {
+    //       newRouteList.push(routeList[j])
+    //       break
+    //     }
+    //   }
+    // }
+
+    const functionList = ref([])
+
+    const handleClickMenuItem = (curProject, list) => {
+      // console.log('click', list)
+      functionList.value = list
+    }
+
+    return {newRouteList, handleClickMenuItem, functionList}
+  }
+});
+</script>
+
+<style lang="scss" scoped>
+  .home {
+    width: 100%;
+    /*display: flex;*/
+    /*justify-content: center;*/
+    /*align-items: center;*/
+    height: 100vh;
+    background-color: #f6f5f7;
+    background-size: cover;
+    background-image: url("@/assets/img/login/background.svg");
+  }
+  h2{
+    text-align: center;
+    height: 100px;
+    line-height: 100px;
+  }
+  .el-header{
+    text-align: center;
+    height: 80px;
+    line-height: 80px;
+    background-color: cornflowerblue;
+  }
+  .el-aside {
+    .el-menu {
+      //height: calc(100vh - 80px);
+    }
+    .el-sub-menu {
+      //height: 100px;
+    }
+    .el-menu .el-sub-menu {
+      //height: 100px;
+    }
+    .el-menu .el-menu-item {
+      //height: 100px;
+    }
+  }
+</style>

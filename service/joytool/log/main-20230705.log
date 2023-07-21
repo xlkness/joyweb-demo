@@ -1,0 +1,1 @@
+{"service":"main","node_id":"hQPgMK3","log_level":"notice","log_time":"23/07/05 11:30:12.042","caller":"internal/application/scheduler.go:95","message":"application receive signal(interrupt), will graceful stop"}

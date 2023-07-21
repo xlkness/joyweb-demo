@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+
+package api_gmtool;
+
+// compile:joymicro_mode=all_in_one protoc -I$PROJECT_PATH/src/proto -I. --gogofaster_out=. --joymicro_out=. *.proto
+// compile:joymicro_mode=all_in_one protoc -I./ --plugin=protoc-gen-joymicro=absolute_path/protoc-gen-joymicro --gogofaster_out=./ --joymicro_out=./ ./*.proto
+
+service GmTool {
+  rpc Placehold(PlaceholdReq) returns (PlaceholdRes) {};
+}
+
+message PlaceholdReq {
+
+}
+message PlaceholdRes {
+  
+}

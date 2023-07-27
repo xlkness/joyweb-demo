@@ -58,7 +58,7 @@ func (d *Dao) AddCommandServer(cmdServer *request.CommandServerData) (*do.Comman
 }
 
 func (d *Dao) SaveCommandServerList() error {
-	return d.cmdServerList.persistentSave()
+	return d.cmdServerList.PersistentSave()
 }
 
 func (d *Dao) UpdateCommandServer(cmdServer *request.CommandServerData) (*do.CommandServer, error) {
@@ -99,7 +99,7 @@ func (d *Dao) DeleteCommandServerExecHistory(params *request.DeleteExecHistory) 
 	data.Data.ExecHistoryList = append(data.Data.ExecHistoryList[:params.Index],
 		data.Data.ExecHistoryList[params.Index+1:]...)
 
-	d.cmdServerList.persistentSave()
+	d.cmdServerList.PersistentSave()
 
 	return nil
 }

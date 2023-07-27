@@ -24,4 +24,9 @@ func (s *Server) initRouter() {
 
 	s.engine.PostWithStructParams("/likecommand", "exec command list", request.ExecCommand{}, ctl.LikeCommand)
 	s.engine.PostWithStructParams("/dislikecommand", "exec command list", request.DeleteLikeCommand{}, ctl.DislikeCommand)
+
+	s.engine.GetWithStructParams("/listpermissiongroup", "exec command list", request.PermissionGroupList{}, ctl.PermissionGroupList)
+	s.engine.PostWithStructParams("/createpermissiongroup", "exec command list", request.PermissionGroupData{}, ctl.CreatePermissionGroup)
+	s.engine.PostWithStructParams("/editpermissiongroup", "exec command list", request.PermissionGroupData{}, ctl.EditPermissionGroup)
+	s.engine.PostWithStructParams("/deletepermissiongroup", "exec command list", request.DeletePermissionGroup{}, ctl.DeletePermissionGroup)
 }

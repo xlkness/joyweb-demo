@@ -14,16 +14,32 @@
               text-color="black"
               router
           >
-            <el-menu-item v-for="(routeItem, idx) in newRouteList" class="sub-menu" :index="routeItem.path">
-              <el-icon>
-                <component class="el-icon" :is="routeItem.meta.icon"></component>
-              </el-icon>
-              <span>{{routeItem.meta.name}}</span>
-            </el-menu-item>
+            <template v-for="(routeItem, idx) in newRouteList">
+              <el-sub-menu class="sub-menu" :index="routeItem.meta.name"  v-if="(routeItem.children && routeItem.children.length > 0)">
+                <template #title>
+                  <el-icon><location></location></el-icon>
+                  <span>{{routeItem.meta.name}}</span>
+                </template>
+                <el-menu-item-group v-for="routeItemChildren in routeItem.children" :index="routeItemChildren.path">
+                  <el-menu-item :index="routeItemChildren.path" title="routeItemChildren.meta.name">
+                    <el-icon>
+                      <component class="el-icon" :is="routeItemChildren.meta.icon"></component>
+                    </el-icon>
+                    <span>{{routeItemChildren.meta.name}}</span>
+                  </el-menu-item>
+                </el-menu-item-group>
+              </el-sub-menu>
+              <el-menu-item :index="routeItem.path" v-else>
+                <el-icon>
+                  <component class="el-icon" :is="routeItem.meta.icon"></component>
+                </el-icon>
+                <span>{{routeItem.meta.name}}</span>
+              </el-menu-item>
+            </template>
           </el-menu>
         </el-aside>
         <el-main>
-          <router-view></router-view>
+          <router-view :key="123"></router-view>
         </el-main>
       </el-container>
     </el-container>
@@ -71,6 +87,30 @@ export default defineComponent({
 .el-menu {
   height: 100%;
 }
+
+:deep() {
+  .el-sub-menu__title {
+    font-size: 30px !important;
+    background-color: #ffffff !important;
+  }
+  .el-sub-menu__title:hover {
+    outline: 0 !important;
+    color: white !important;
+    border-radius: 6%;
+    background-color: #445ebf !important;
+  }
+}
+
+//.el-sub-menu:hover {
+//  outline: 0 !important;
+//  color: white !important;
+//  border-radius: 6%;
+//  background-color: #445ebf !important;
+//}
+//
+//.el-sub-menu.is-active {
+//  color: #1890ff !important;
+//}
 
 .el-menu-item {
   font-size: 30px;

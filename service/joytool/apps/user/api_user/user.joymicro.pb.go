@@ -26,7 +26,7 @@ var _ context.Context
 
 // UserServiceInterface 服务调用接口
 type UserServiceInterface interface {
-	Placehold(context.Context, *PlaceholdReq) (*PlaceholdRes, error)
+	GetUserInfo(context.Context, *GetUserInfoReq) (*GetUserInfoRes, error)
 }
 
 // NewUserService 创建服务调用
@@ -37,7 +37,7 @@ func NewUserServiceInstance() UserServiceInterface {
 
 // UserHandlerInterface 服务节点handler接口定义
 type UserHandlerInterface interface {
-	Placehold(context.Context, *PlaceholdReq, *PlaceholdRes) error
+	GetUserInfo(context.Context, *GetUserInfoReq, *GetUserInfoRes) error
 }
 
 // NewUserHandler 创建并注册、运行一个服务
@@ -53,9 +53,9 @@ var userHandlerLocal UserHandlerInterface
 // userServiceLocal 本地函数调用，用于调试
 type userServiceLocal struct{}
 
-func (c *userServiceLocal) Placehold(ctx context.Context, in *PlaceholdReq) (*PlaceholdRes, error) {
-	var out *PlaceholdRes = new(PlaceholdRes)
+func (c *userServiceLocal) GetUserInfo(ctx context.Context, in *GetUserInfoReq) (*GetUserInfoRes, error) {
+	var out *GetUserInfoRes = new(GetUserInfoRes)
 	var err error
-	err = userHandlerLocal.Placehold(ctx, in, out)
+	err = userHandlerLocal.GetUserInfo(ctx, in, out)
 	return out, err
 }

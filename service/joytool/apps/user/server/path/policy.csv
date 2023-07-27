@@ -1,0 +1,5 @@
+p, superAdmin, /createuser, write
+p, userAdmin, /createuser, read
+g, alice, superAdmin
+g, bob, userAdmin
+g, marry, superAdmin

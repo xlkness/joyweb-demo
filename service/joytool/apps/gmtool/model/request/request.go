@@ -53,3 +53,19 @@ type DeleteExecHistory struct {
 	Name    string `json:"name"`  // project内唯一
 	Index   int    `json:"index"` // 第几个索引处的历史
 }
+
+type PermissionGroupList struct {
+	Project string `json:"project"`
+}
+
+type PermissionGroupData struct {
+	Project     string           `json:"project"`
+	Name        string           `json:"name"`
+	Desc        string           `json:"desc"`
+	Permissions []*do.Permission `json:"permissions"`
+}
+
+type DeletePermissionGroup struct {
+	Project string `json:"project"`
+	Name    string `json:"name"`
+}

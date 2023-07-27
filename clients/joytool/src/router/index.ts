@@ -1,9 +1,11 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import {createRouter, createWebHashHistory, createWebHistory, RouteRecordRaw} from 'vue-router'
 import UserView from "@/views/user/UserView.vue";
 import LoginView from "@/views/LoginView.vue";
 import NewHomeView from "@/views/NewHomeView.vue";
 import GMToolHomeView from "@/views/gmtool/GMToolHomeView.vue";
 import GMToolMenuItem from "@/views/gmtool/GMToolMenuItem.vue";
+import UserListView from "@/views/user/UserListView.vue";
+import TestView from "@/views/TestView.vue";
 
 export let homeRoutes = [
   {
@@ -25,13 +27,52 @@ export let homeRoutes = [
       'icon': "Tools",
       'useMenuItem': false,
     },
-    component: UserView,
+    children: [
+      {
+        path: "/userlist",
+        name: "userlist",
+        meta: {
+          'name': '用户管理',
+          'icon': "Tools",
+          'useMenuItem': false,
+          // 'menuItem': GMToolMenuItem,
+        },
+        component: UserListView,
+      },
+    ],
+    // component: UserView,
   },
+  {
+    path: "/test/:project",
+    name: "test1",
+    component: TestView,
+    meta: {
+      name: "test1",
+    },
+    query: {
+      t: Date.now()
+    }
+  },
+  {
+    path: "/test/:project",
+    name: "test2",
+    meta: {
+      name: "test2",
+    },
+    component: TestView,
+    query: {
+      t: Date.now()
+    }
+  }
 ]
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
+    redirect: '/login',
+  },
+  {
+    path: '/home',
     name: 'home',
     component: NewHomeView,
     children: homeRoutes,
@@ -44,7 +85,7 @@ const routes: Array<RouteRecordRaw> = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHashHistory(process.env.BASE_URL),
   routes
 })
 

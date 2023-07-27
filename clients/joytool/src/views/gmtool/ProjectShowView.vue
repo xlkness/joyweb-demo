@@ -21,7 +21,8 @@
       <el-main class="functionMain">
         <el-tabs type="border-card" v-model="selectTabName" class="function-tab" :tab-position="tabPosition" @tab-click="handleClick">
           <el-tab-pane v-for="tabPane in TabList" :label="tabPane.name" :name="tabPane.key" :key="tabPane.keyCount">
-            <component :is="tabPane.component" v-if="(selectTabName == tabPane.key)" :project="project"></component>
+            <component :is="tabPane.component" v-if="(selectTabName == tabPane.key)" :project="project"
+                       subsystem="gmtool" subsystemName="GM管理系统" :subsystemGroups="subsystemGroups"></component>
           </el-tab-pane>
         </el-tabs>
       </el-main>
@@ -37,6 +38,9 @@ import EditCmdServerListView from "@/components/gmtool/EditCmdServerListView.vue
 import EditEnvListView from "@/components/gmtool/EditEnvListView.vue";
 import EditLikeList from "@/components/gmtool/EditLikeList.vue";
 import EditExecHistoryList from "@/components/gmtool/EditExecHistoryList.vue";
+import UserList from "@/components/user/UserList.vue";
+import PermissionGroupList from "@/components/gmtool/PermissionGroupList.vue";
+import {permissionGroupList} from "@/requests/gmtool";
 
 export default defineComponent({
   props: ['project', 'currentComponent',],
@@ -76,6 +80,18 @@ export default defineComponent({
         keyCount : 0,
         component: EditExecHistoryList,
       },
+      {
+        name: "权限组管理",
+        key: "permissions",
+        keyCount: 0,
+        component: PermissionGroupList,
+      },
+      {
+        name: '用户管理',
+        key: "userList",
+        keyCount : 0,
+        component: UserList,
+      }
     ])
 
     const handleBackHome = () => {
@@ -83,14 +99,40 @@ export default defineComponent({
       ctx.emit('update:project', '')
     }
     const selectTabName = ref('exec')
+    const subsystemGroups = ref([])
+
     const handleClick = (paneCtx, event) => {
       // paneCtx.props.key = count.value
       let curTabData = TabList.value.filter(item => item.key == paneCtx.props.name)[0]
       curTabData.keyCount++
       selectTabName.value = paneCtx.props.name
+
+      permissionGroupList({project: project}).then((res)=>{
+        if (res.payload) {
+          subsystemGroups.value = []
+          res.payload.forEach(function (value, index, obj) {
+            subsystemGroups.value.push(value.name)
+          })
+          console.log("groups:", subsystemGroups.value)
+        }
+      }, (err) => {
+        console.log("groupList return error", err)
+      })
       // console.log('click pane', paneCtx.props.name)
     }
-    return {handleBackHome, TabList, selectTabName, handleClick, project, tabPosition}
+
+    permissionGroupList({project: project}).then((res)=>{
+      if (res.payload) {
+        subsystemGroups.value = []
+        res.payload.forEach(function (value, index, obj) {
+          subsystemGroups.value.push(value.name)
+        })
+      }
+    }, (err) => {
+      console.log("groupList return error", err)
+    })
+
+    return {handleBackHome, TabList, selectTabName, handleClick, project, tabPosition, subsystemGroups}
   }
 })
 </script>

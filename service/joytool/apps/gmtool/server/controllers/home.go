@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"joytool/apps/gmtool/model"
 	"joytool/apps/gmtool/model/request"
+	"joytool/apps/user/api_user"
 	"sort"
 )
 
@@ -12,7 +13,14 @@ func (ctl *Controllers) HomeView(ctx *model.MyContext, params *request.HomeView)
 		ctx.RespFailMessage(300, fmt.Sprintf("project empty!please input project"))
 		return
 	}
-	fmt.Printf("receive gmtool home view\n")
+
+	_, err := ctl.UserSvc.GetUserInfo(nil, &api_user.GetUserInfoReq{UserName: ctx.GetUserName()})
+	if err != nil {
+		ctx.RespFailMessage(300, err.Error())
+		return
+	}
+
+	fmt.Printf("receive gmtool home view, user:%+v\n", ctx.GetUserName())
 
 	commandServerList, _ := ctl.Db.QueryCmdServerList(params.Project)
 	sort.SliceStable(commandServerList, func(i, j int) bool {
@@ -32,9 +40,12 @@ func (ctl *Controllers) HomeView(ctx *model.MyContext, params *request.HomeView)
 		return likeList[i].Command.Date < likeList[j].Command.Date
 	})
 
+	permissionGroupList := ctl.Db.PermissionGroupList(params.Project)
+
 	ctx.RespSuccessJson(map[string]interface{}{
-		"command_server_list": commandServerList,
-		"env_list":            envs,
-		"like_list":           likeList,
+		"command_server_list":   commandServerList,
+		"env_list":              envs,
+		"like_list":             likeList,
+		"permission_group_list": permissionGroupList,
 	})
 }

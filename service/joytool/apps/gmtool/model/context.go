@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	lkit_go "github.com/xlkness/lkit-go"
+	"joytool/lib/token"
 )
 
 type MyContext struct {
@@ -68,4 +69,11 @@ func (myCtx *MyContext) respJsonPAny(code int, contentCode int, payload any) {
 		"message": message,
 		"payload": payload,
 	})
+}
+
+func (myCtx *MyContext) GetUserName() string {
+	tokenStr := myCtx.GetGinContext().Request.Header.Get("x-token")
+	checkedToken, _ := token.ValidToken(tokenStr)
+	checkedClaims := checkedToken.Claims.(*token.RegisteredTokenClaims)
+	return checkedClaims.User
 }

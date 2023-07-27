@@ -1,0 +1,107 @@
+<template>
+  <div>
+    <el-container>
+      <el-header>
+        <el-button @click="handleAddUser" size="large" type="primary">添加用户</el-button>
+      </el-header>
+      <el-main>
+        <el-table :data="userList" :default-sort="{prop:'index', order: 'ascending'}"  table-layout="auto" stripe style="width: 98vh;height: 60vh">
+          <el-table-column prop="username" label="名 字">
+          </el-table-column>
+          <el-table-column prop="created_at" label="创建时间">
+          </el-table-column>
+          <el-table-column prop="func" label="功 能">
+            <template #default="scope">
+              <el-button @click="handleEditUser(scope.$index, scope.row)" size="large" type="success">
+                <el-icon style="vertical-align: middle">
+                  <Operation/>
+                </el-icon>
+                <span>编辑</span>
+              </el-button>
+              <el-button  @click="handleDeleteUser(scope.$index, scope.row)" size="large" type="danger">
+                <el-icon style="vertical-align: middle">
+                  <Operation/>
+                </el-icon>
+                <span>删除</span>
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+
+        <el-dialog v-model="dialogAddUserVisible" :title="subsystemName+'/添加用户'" modal="true" :before-close="handleCloseDialog" destroy-on-close>
+          <template #header>
+            <span v-if="dialogUserData.oldData && dialogUserData.oldData.username">{{subsystemName}}/修改用户</span>
+            <span v-else>{{subsystemName}}/添加用户</span>
+          </template>
+          <component :is="dialogAddUser" :subsystem="subsystem" :subsystemName="subsystemName" :subsystemGroups="subsystemGroups"
+                     :dialogUserData="dialogUserData" :userList="userList" @update:userList="userList=$event"
+                     :dialogAddUserVisible="dialogAddUserVisible" @update:dialogAddUserVisible="dialogAddUserVisible=$event"></component>
+        </el-dialog>
+
+      </el-main>
+    </el-container>
+  </div>
+</template>
+
+<script lang="ts">
+import {defineComponent, ref} from "vue";
+import {createUser, deleteUser, listUsers} from "@/requests/user";
+import {ElNotification, FormInstance} from "element-plus";
+import {addEnv} from "@/requests/gmtool";
+import OperateUser from "@/components/user/OperateUser.vue";
+
+export default defineComponent({
+  props: ['subsystem', 'subsystemName', 'subsystemGroups'],
+  setup(props) {
+    const subsystem = props.subsystem || "user"
+    const subsystemName = props.subsystemName || "用户系统"
+    const subsystemGroups = props.subsystemGroups || ["用户管理员", "普通用户"]
+
+    const userList = ref([])
+    listUsers().then((res) => {
+      userList.value = res.payload
+    }, (err) => {
+      console.log(err)
+    })
+
+    const dialogAddUser = OperateUser
+    const dialogAddUserVisible = ref(false)
+    const dialogUserData = ref({
+      index: -1,
+      oldData: {},
+    })
+
+    const handleAddUser = () => {
+      dialogAddUserVisible.value = true
+    }
+    const handleEditUser = (index, row) => {
+      dialogAddUserVisible.value = true
+      dialogUserData.value.index = index
+      dialogUserData.value.oldData = row
+    }
+    const handleCloseDialog = () => {
+      dialogAddUserVisible.value = false
+      dialogUserData.value = {index: -1, oldData: {}}
+    }
+    const handleDeleteUser = (index, row) => {
+      deleteUser({username: row.username}).then((res) => {
+        ElNotification({
+          title: "删除结果通知",
+          message: "删除用户[" + row.username + "]成功！",
+          type: 'success',
+          duration: 4000,
+          "show-close": true,
+        })
+        userList.value.splice(index, 1)
+      })
+    }
+
+    return {subsystem, subsystemName, subsystemGroups, handleAddUser,
+      handleCloseDialog, dialogAddUserVisible, handleEditUser, userList, dialogAddUser, dialogUserData, handleDeleteUser}
+  }
+})
+</script>
+
+<style scoped>
+
+</style>

@@ -156,3 +156,48 @@ export  function deleteExecHistory(data: deleteExecHistory) {
         data: data
     })
 }
+
+export function permissionGroupList(data) {
+    return service.gmtool({
+        url: "/listpermissiongroup",
+        method: "get",
+        params: data
+    })
+}
+
+interface permission {
+    env: string,
+    command_server: string,
+    action: string, // write|read
+}
+interface permissionGroupData {
+    project: string,
+    name: string,
+    desc: string,
+    permissions: permission[],
+}
+interface deletePermissionGroup {
+    project: string,
+    name: string
+}
+export function createPermissionGroup(data: permissionGroupData) {
+    return service.gmtool({
+        url: "/createpermissiongroup",
+        method: "post",
+        data
+    })
+}
+export function editPermissionGroup(data: permissionGroupData) {
+    return service.gmtool({
+        url: "/editpermissiongroup",
+        method: "post",
+        data
+    })
+}
+export function deletePermissionGroup(data: deletePermissionGroup) {
+    return service.gmtool({
+        url: "/deletepermissiongroup",
+        method: "post",
+        data
+    })
+}

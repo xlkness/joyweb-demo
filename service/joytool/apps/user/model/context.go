@@ -1,6 +1,10 @@
 package model
 
-import "github.com/gin-gonic/gin"
+import (
+	"fmt"
+	"github.com/gin-gonic/gin"
+	lkit_go "github.com/xlkness/lkit-go"
+)
 
 type MyContext struct {
 	ctx *gin.Context
@@ -13,7 +17,8 @@ func (myCtx *MyContext) GetGinContext() *gin.Context {
 	return myCtx.ctx
 }
 func (myCtx *MyContext) ResponseParseParamsFieldFail(path string, uri string, body string, field string, value string, err error) {
-
+	lkit_go.Errorf("[%v] [%v] [%v] [%v] [%v] ResponseParseParamsFieldFail error:%v", path, uri, body, field, value, err)
+	myCtx.RespFailMessage(300, fmt.Sprintf("解析参数错误：%v", err))
 }
 
 func (myCtx *MyContext) RespSuccessJson(data interface{}) {

@@ -27,3 +27,17 @@ type LikeExecCommand struct {
 	ID      int             `json:"id"`
 	Command *PreExecCommand `json:"command"`
 }
+
+type Permission struct {
+	Env           string `json:"env"`
+	CommandServer string `json:"command_server"`
+	Action        string `json:"action"` // write|read
+}
+
+type PermissionGroupData struct {
+	Project     string        `json:"project"`
+	Name        string        `json:"name"`
+	Desc        string        `json:"desc"`
+	Permissions []*Permission `json:"permissions"`
+	CreatedAt   string        `json:"created_at"`
+}

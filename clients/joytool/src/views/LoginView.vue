@@ -62,7 +62,7 @@
 import {defineComponent, reactive, toRefs, ref } from "vue";
 import { LoginData } from "../types/Login";
 import type { FormInstance } from "element-plus";
-import {login} from '../requests/login';
+import {login} from '../requests/user';
 import {useRouter} from "vue-router";
 import LocalCache from "@/stores/localCache";
 
@@ -75,7 +75,6 @@ export default defineComponent({
       routeNameList.push(String(routeList[i].name))
     }
     const data=reactive(new LoginData())
-    data.ruleForm.modules=routeNameList
 
     const rules={
       username: [
@@ -114,13 +113,12 @@ export default defineComponent({
       formEl.validate((valid) => {
         if (valid) {
           console.log('submit!')
-          login(data.ruleForm).then((res)=>{
+          login({base_info: data.ruleForm}).then((res)=>{
             console.log('login ok')
             console.log(res);
             // 保存token，跳转
             localStorage.setItem('token', res.payload.token)
-            LocalCache.setCache('modules_permissions', {"modules": res.payload.modules})
-            router.push('/')
+            router.push('/home')
           }, (res) => {
             console.log("login response error:")
             console.log(res)

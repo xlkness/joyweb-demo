@@ -2,24 +2,31 @@ package dao
 
 import (
 	"joytool/apps/gmtool/model/do"
+	"joytool/lib/filedb"
 )
 
 type Dao struct {
-	cmdServerList *fileDb[do.CommandServer]
-	envList       *fileDb[do.Env]
-	likeList      *fileDb[do.LikeExecCommand]
+	cmdServerList       *filedb.FileDB[do.CommandServer]
+	envList             *filedb.FileDB[do.Env]
+	likeList            *filedb.FileDB[do.LikeExecCommand]
+	permissionGroupList *filedb.FileDB[do.PermissionGroupData]
 }
 
 func NewDao() *Dao {
-	csl, err := newFileDb[do.CommandServer]("command_server_list")
+	csl, err := filedb.NewFileDb[do.CommandServer]("gmtool", "command_server_list")
 	if err != nil {
 		panic(err)
 	}
-	el, err := newFileDb[do.Env]("env_list")
+	el, err := filedb.NewFileDb[do.Env]("gmtool", "env_list")
 	if err != nil {
 		panic(err)
 	}
-	ll, err := newFileDb[do.LikeExecCommand]("like_list")
+	ll, err := filedb.NewFileDb[do.LikeExecCommand]("gmtool", "like_list")
+	if err != nil {
+		panic(err)
+	}
+
+	gl, err := filedb.NewFileDb[do.PermissionGroupData]("gmtool", "group_list")
 	if err != nil {
 		panic(err)
 	}
@@ -29,6 +36,7 @@ func NewDao() *Dao {
 	d.cmdServerList = csl
 	d.envList = el
 	d.likeList = ll
+	d.permissionGroupList = gl
 
 	return d
 }

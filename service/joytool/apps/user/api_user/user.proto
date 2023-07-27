@@ -7,12 +7,15 @@ package api_user;
 // compile:joymicro_mode=all_in_one protoc -I./ --plugin=protoc-gen-joymicro=absolute_path/protoc-gen-joymicro --gogofaster_out=./ --joymicro_out=./ ./*.proto
 
 service User {
-  rpc Placehold(PlaceholdReq) returns (PlaceholdRes) {};
+  rpc GetUserInfo(GetUserInfoReq) returns (GetUserInfoRes) {};
 }
 
-message PlaceholdReq {
-
+message GetUserInfoReq {
+  string UserName = 1;
+  string System = 2;
 }
-message PlaceholdRes {
-  
+message GetUserInfoRes {
+  string UserName = 1;
+  bool IsAdmin = 2;
+  string Group = 3;
 }

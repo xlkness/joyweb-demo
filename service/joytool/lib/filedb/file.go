@@ -9,13 +9,13 @@ var (
 	FileDBDataPath = "db/"
 )
 
-type FileDB struct {
+type dbFile struct {
 	SubPath  string
 	FileName string
 }
 
-func NewFileDB(subPath, dbName string) (*FileDB, error) {
-	fileDB := &FileDB{
+func newDbFile(subPath, dbName string) (*dbFile, error) {
+	fileDB := &dbFile{
 		SubPath:  subPath,
 		FileName: dbName,
 	}
@@ -29,7 +29,7 @@ func NewFileDB(subPath, dbName string) (*FileDB, error) {
 	return fileDB, nil
 }
 
-func (fdb *FileDB) GetCurrentObject() ([]byte, error) {
+func (fdb *dbFile) GetCurrentObject() ([]byte, error) {
 	fd, err := fdb.getFd(false)
 	content, err := readFileAll(fd)
 	if err != nil {
@@ -39,7 +39,7 @@ func (fdb *FileDB) GetCurrentObject() ([]byte, error) {
 	return content, err
 }
 
-func (fdb *FileDB) WriteCurrentObject(data []byte) error {
+func (fdb *dbFile) WriteCurrentObject(data []byte) error {
 	fd, err := fdb.getFd(true)
 	if err != nil {
 		return err
@@ -49,7 +49,7 @@ func (fdb *FileDB) WriteCurrentObject(data []byte) error {
 	return err
 }
 
-func (fdb *FileDB) getFd(truncate bool) (*os.File, error) {
+func (fdb *dbFile) getFd(truncate bool) (*os.File, error) {
 	os.MkdirAll(FileDBDataPath+fdb.SubPath, 0777)
 	file := FileDBDataPath + fdb.SubPath + "/" + fdb.FileName + ".db"
 	flags := os.O_CREATE | os.O_RDWR

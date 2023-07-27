@@ -9,6 +9,7 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    AddUser: typeof import('./components/user/AddUser.vue')['default']
     CmdExecute: typeof import('./components/gmtool/CmdExecute.vue')['default']
     CmdExecuteWithHistory: typeof import('./components/gmtool/CmdExecuteWithHistory.vue')['default']
     CmdServer: typeof import('./components/gmtool/CmdServer.vue')['default']
@@ -41,22 +42,30 @@ declare module '@vue/runtime-core' {
     ElPageHeader: typeof import('element-plus/es')['ElPageHeader']
     ElPopover: typeof import('element-plus/es')['ElPopover']
     ElRadio: typeof import('element-plus/es')['ElRadio']
+    ElRadioButton: typeof import('element-plus/es')['ElRadioButton']
+    ElRadioGroup: typeof import('element-plus/es')['ElRadioGroup']
     ElRow: typeof import('element-plus/es')['ElRow']
     ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
     ElSelect: typeof import('element-plus/es')['ElSelect']
     ElSubMenu: typeof import('element-plus/es')['ElSubMenu']
+    ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ElTabPane: typeof import('element-plus/es')['ElTabPane']
     ElTabs: typeof import('element-plus/es')['ElTabs']
     ElText: typeof import('element-plus/es')['ElText']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
+    ElTree: typeof import('element-plus/es')['ElTree']
     EnvView: typeof import('./components/gmtool/EnvView.vue')['default']
     EnvViews: typeof import('./components/gmtool/EnvViews.vue')['default']
     HeaderView: typeof import('./components/HeaderView.vue')['default']
     HomeView: typeof import('./components/HomeView.vue')['default']
     LoginView: typeof import('./components/LoginView.vue')['default']
+    OperateUser: typeof import('./components/user/OperateUser.vue')['default']
+    PermissionGroup: typeof import('./components/gmtool/PermissionGroup.vue')['default']
+    PermissionGroupList: typeof import('./components/gmtool/PermissionGroupList.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    UserList: typeof import('./components/user/UserList.vue')['default']
   }
 }

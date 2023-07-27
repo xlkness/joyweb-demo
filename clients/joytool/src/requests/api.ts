@@ -41,7 +41,7 @@ userService.interceptors.request.use((config)=>{
 userService.interceptors.response.use((res)=>{
     const code:number=res.data.code
     if(code!=200) {
-        // console.log("interceptor err code", res)
+        console.log("interceptor err code", res)
         ElMessageBox.alert("请求服务器成功，但是逻辑错误:" + res.data.message, "服务器错误码" + code, {
             type: "warning",
             confirmButtonText: '知道了',
@@ -51,6 +51,7 @@ userService.interceptors.response.use((res)=>{
 
     return res.data
 }, (err)=>{
+    console.log(err)
     const code:number = err.response && err.response.status || -1
     const message: string = err.response && err.response.data.message || err
     ElMessageBox.alert(message, "请求服务器返回http错误码-" + code, {
@@ -74,7 +75,7 @@ gmtoolService.interceptors.request.use((config)=>{
 gmtoolService.interceptors.response.use((res)=>{
     const code:number=res.data.code
     if(code!=200) {
-        // console.log("interceptor err code", res)
+        console.log("interceptor err code", res)
         ElMessageBox.alert("请求服务器成功，但是逻辑错误:" + res.data.message, "服务器错误码" + code, {
             type: "warning",
             confirmButtonText: '知道了',

@@ -1,28 +1,32 @@
-package dao
+package filedb
 
 import (
 	"encoding/json"
 	"fmt"
 	"joytool/apps/gmtool/model/do"
-	"joytool/lib/filedb"
+	doUser "joytool/apps/user/model/do"
 	"sort"
 	"strconv"
 	"sync"
 )
 
-type DbRowData[Elem do.Env | do.CommandServer | do.LikeExecCommand] struct {
+type ElemType interface {
+	do.Env | do.CommandServer | do.LikeExecCommand | doUser.User | do.PermissionGroupData
+}
+
+type DbRowData[Elem ElemType] struct {
 	ID   int
 	Data *Elem
 }
-type fileDb[Elem do.Env | do.CommandServer | do.LikeExecCommand] struct {
-	db      *filedb.FileDB
+type FileDB[Elem ElemType] struct {
+	db      *dbFile
 	allData map[string]*DbRowData[Elem]
 	maxID   int
 	locker  *sync.Mutex
 }
 
-func newFileDb[Elem do.Env | do.CommandServer | do.LikeExecCommand](dbName string) (*fileDb[Elem], error) {
-	db, err := filedb.NewFileDB("gmtool", dbName)
+func NewFileDb[Elem ElemType](subSystemName, dbName string) (*FileDB[Elem], error) {
+	db, err := newDbFile(subSystemName, dbName)
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +52,7 @@ func newFileDb[Elem do.Env | do.CommandServer | do.LikeExecCommand](dbName strin
 		}
 	}
 
-	fd := &fileDb[Elem]{
+	fd := &FileDB[Elem]{
 		db:      db,
 		allData: allData,
 		maxID:   maxID,
@@ -57,7 +61,7 @@ func newFileDb[Elem do.Env | do.CommandServer | do.LikeExecCommand](dbName strin
 	return fd, nil
 }
 
-func (fd *fileDb[Elem]) GetList() []*DbRowData[Elem] {
+func (fd *FileDB[Elem]) GetList() []*DbRowData[Elem] {
 	fd.locker.Lock()
 	defer fd.locker.Unlock()
 
@@ -73,7 +77,7 @@ func (fd *fileDb[Elem]) GetList() []*DbRowData[Elem] {
 	return list
 }
 
-func (fd *fileDb[Elem]) Get(unionName ...any) (*DbRowData[Elem], bool) {
+func (fd *FileDB[Elem]) Get(unionName ...any) (*DbRowData[Elem], bool) {
 	fd.locker.Lock()
 	defer fd.locker.Unlock()
 
@@ -83,7 +87,7 @@ func (fd *fileDb[Elem]) Get(unionName ...any) (*DbRowData[Elem], bool) {
 }
 
 // StoreUnique 不能重名
-func (fd *fileDb[Elem]) StoreUnique(data *Elem, unionName ...any) (*DbRowData[Elem], bool) {
+func (fd *FileDB[Elem]) StoreUnique(data *Elem, unionName ...any) (*DbRowData[Elem], bool) {
 	fd.locker.Lock()
 	defer fd.locker.Unlock()
 
@@ -96,13 +100,13 @@ func (fd *fileDb[Elem]) StoreUnique(data *Elem, unionName ...any) (*DbRowData[El
 }
 
 // StoreOrReplace 重名就替换
-func (fd *fileDb[Elem]) StoreOrReplace(data *Elem, unionName ...any) (*DbRowData[Elem], bool) {
+func (fd *FileDB[Elem]) StoreOrReplace(data *Elem, unionName ...any) (*DbRowData[Elem], bool) {
 	fd.locker.Lock()
 	defer fd.locker.Unlock()
 
 	return fd.storeOrReplace(data, unionName...)
 }
-func (fd *fileDb[Elem]) storeOrReplace(data *Elem, unionName ...any) (*DbRowData[Elem], bool) {
+func (fd *FileDB[Elem]) storeOrReplace(data *Elem, unionName ...any) (*DbRowData[Elem], bool) {
 	name := fd.joinName(unionName...)
 	oldData, find := fd.allData[name]
 	if find {
@@ -116,12 +120,12 @@ func (fd *fileDb[Elem]) storeOrReplace(data *Elem, unionName ...any) (*DbRowData
 	}
 
 	fd.allData[name] = oldData
-	fd.persistentSave()
+	fd.PersistentSave()
 	return oldData, find
 }
 
 // StorePush 直接追加数据，key为id
-func (fd *fileDb[Elem]) StorePush(data *Elem) *DbRowData[Elem] {
+func (fd *FileDB[Elem]) StorePush(data *Elem) *DbRowData[Elem] {
 	fd.locker.Lock()
 	defer fd.locker.Unlock()
 
@@ -132,11 +136,11 @@ func (fd *fileDb[Elem]) StorePush(data *Elem) *DbRowData[Elem] {
 	}
 	fd.allData[name] = storeData
 	fd.maxID += 1
-	fd.persistentSave()
+	fd.PersistentSave()
 	return storeData
 }
 
-func (fd *fileDb[Elem]) Update(data *Elem, unionName ...any) (*DbRowData[Elem], bool) {
+func (fd *FileDB[Elem]) Update(data *Elem, unionName ...any) (*DbRowData[Elem], bool) {
 	fd.locker.Lock()
 	defer fd.locker.Unlock()
 
@@ -146,11 +150,11 @@ func (fd *fileDb[Elem]) Update(data *Elem, unionName ...any) (*DbRowData[Elem], 
 		return nil, false
 	}
 	storeData.Data = data
-	fd.persistentSave()
+	fd.PersistentSave()
 	return storeData, true
 }
 
-func (fd *fileDb[Elem]) Delete(unionName ...any) (*DbRowData[Elem], bool) {
+func (fd *FileDB[Elem]) Delete(unionName ...any) (*DbRowData[Elem], bool) {
 	fd.locker.Lock()
 	defer fd.locker.Unlock()
 
@@ -160,11 +164,11 @@ func (fd *fileDb[Elem]) Delete(unionName ...any) (*DbRowData[Elem], bool) {
 		return nil, false
 	}
 	delete(fd.allData, name)
-	fd.persistentSave()
+	fd.PersistentSave()
 	return storeData, true
 }
 
-func (fd *fileDb[Elem]) persistentSave() error {
+func (fd *FileDB[Elem]) PersistentSave() error {
 	binData, err := json.Marshal(fd.allData)
 	if err != nil {
 		fmt.Printf("persistentSave error:%v, %v\n", fd.db.FileName, fd.allData)
@@ -174,7 +178,7 @@ func (fd *fileDb[Elem]) persistentSave() error {
 	return fd.db.WriteCurrentObject(binData)
 }
 
-func (fd *fileDb[Elem]) joinName(unionName ...any) string {
+func (fd *FileDB[Elem]) joinName(unionName ...any) string {
 	name := ""
 	for _, v := range unionName {
 		name += fmt.Sprintf("%v-", v)

@@ -32,7 +32,7 @@
 
 <script lang="ts">
 import {defineComponent, ref} from "vue";
-import ProjectSelectView from "@/views/gmtool/ProjectSelectView.vue";
+import ProjectSelectView from "@/views/gmtool_old/ProjectSelectView.vue";
 import EnvViews from "@/components/gmtool/EnvViews.vue";
 import EditCmdServerListView from "@/components/gmtool/EditCmdServerListView.vue";
 import EditEnvListView from "@/components/gmtool/EditEnvListView.vue";
@@ -40,7 +40,7 @@ import EditLikeList from "@/components/gmtool/EditLikeList.vue";
 import EditExecHistoryList from "@/components/gmtool/EditExecHistoryList.vue";
 import UserList from "@/components/user/UserList.vue";
 import PermissionGroupList from "@/components/gmtool/PermissionGroupList.vue";
-import {permissionGroupList} from "@/requests/gmtool";
+import {gmtool, permissionGroupList} from "@/requests/gmtool";
 
 export default defineComponent({
   props: ['project', 'currentComponent',],
@@ -48,6 +48,24 @@ export default defineComponent({
     let project = props.project
     const tabPosition = ref('left')
     // console.log('receive pro:', project)
+
+    const selectTabName = ref('exec')
+    const subsystemGroups = ref([])
+
+    const projectList = new Set
+    gmtool({project: project}).then((res)=> {
+      // 获取到gmtool信息，刷新页面
+      // var commandServerList = res.payload.command_server_list || []
+      // var envList = res.payload.env_list || []
+      // var likeList = res.payload.like_list || []
+
+      var permissionList = res.payload.permission && res.payload.permission.permissions || []
+      for (let i=0; i < permissionList.length; i++) {
+        var curPermission = permissionList[i]
+        projectList.add(curPermission.project)
+      }
+
+    })
 
     const TabList = ref([
       {
@@ -98,8 +116,7 @@ export default defineComponent({
       ctx.emit('update:currentComponent', ProjectSelectView)
       ctx.emit('update:project', '')
     }
-    const selectTabName = ref('exec')
-    const subsystemGroups = ref([])
+
 
     const handleClick = (paneCtx, event) => {
       // paneCtx.props.key = count.value

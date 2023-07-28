@@ -2,11 +2,13 @@ package server
 
 import (
 	lkit_go "github.com/xlkness/lkit-go"
+	"joytool/apps/gmtool/server/controllers"
 	"joytool/apps/gmtool/service"
 )
 
 type Server struct {
 	engine *lkit_go.WebEngine
+	ctl    *controllers.Controllers
 	svc    *service.Service
 }
 

@@ -62,6 +62,8 @@ export default defineComponent({
     })
     const commandExecResult = ref('')
 
+    console.log("cur command:", command, command.action)
+
     for (let i=0; i<command.fields.length; i++) {
       const fieldData = {
         key: command.fields[i].name,

@@ -18,6 +18,15 @@ func (d *Dao) PermissionGroupList(project string) []*do.PermissionGroupData {
 	return list1
 }
 
+func (d *Dao) GetPermissionGroup(project, group string) (*do.PermissionGroupData, bool) {
+	data, find := d.permissionGroupList.Get(project, group)
+	if !find {
+		return nil, false
+	}
+
+	return data.Data, true
+}
+
 func (d *Dao) CreatePermissionGroup(params *request.PermissionGroupData) (*do.PermissionGroupData, error) {
 	doData := &do.PermissionGroupData{
 		Project:     params.Project,

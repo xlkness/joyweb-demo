@@ -22,7 +22,7 @@
             />
           </el-form-item>
 <!--            <el-form-item>-->
-            <el-button class="theme-button" type="primary" @click="submitForm(ruleFormRef)">登 陆</el-button>
+            <el-button class="theme-button" type="primary" @click="submitForm(ruleFormRef)" @keydown.enter="keyDown()">登 陆</el-button>
             <p class="forget"
                 @click="
                 currentModel = !currentModel;
@@ -47,7 +47,7 @@
                 @click="
                 currentModel = !currentModel;
                 isForget = false;
-              "
+                "
             >
               注册
             </button>
@@ -67,6 +67,12 @@ import {useRouter} from "vue-router";
 import LocalCache from "@/stores/localCache";
 
 export default defineComponent({
+  mounted() {
+    window.addEventListener("keydown", this.keyDown)
+  },
+  unmounted() {
+    window.removeEventListener("keydown", this.keyDown, false)
+  },
   setup() {
     const router=useRouter()
     const routeList=router.getRoutes().filter(v=>v.meta.menu_tab)
@@ -134,7 +140,14 @@ export default defineComponent({
       data.ruleForm.username=""
       data.ruleForm.password=""
     }
-    return {...toRefs(data), rules, resetForm, ruleFormRef, submitForm};
+
+    const keyDown = (e) => {
+      if (e.keyCode === 13 || e.keyCode === 100) {
+        submitForm(ruleFormRef.value)
+      }
+    }
+
+    return {...toRefs(data), rules, resetForm, ruleFormRef, submitForm, keyDown};
   }
 })
 

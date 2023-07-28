@@ -14,7 +14,7 @@ func (ctl *Controllers) HomeView(ctx *model.MyContext, params *request.HomeView)
 		return
 	}
 
-	_, err := ctl.UserSvc.GetUserInfo(nil, &api_user.GetUserInfoReq{UserName: ctx.GetUserName()})
+	userInfo, err := ctl.UserSvc.GetUserInfo(nil, &api_user.GetUserInfoReq{UserName: ctx.GetUserName(), System: "gmtool"})
 	if err != nil {
 		ctx.RespFailMessage(300, err.Error())
 		return
@@ -42,10 +42,13 @@ func (ctl *Controllers) HomeView(ctx *model.MyContext, params *request.HomeView)
 
 	permissionGroupList := ctl.Db.PermissionGroupList(params.Project)
 
+	permissionList, _ := ctl.Db.GetPermissionGroup(params.Project, userInfo.Group)
+
 	ctx.RespSuccessJson(map[string]interface{}{
 		"command_server_list":   commandServerList,
 		"env_list":              envs,
 		"like_list":             likeList,
 		"permission_group_list": permissionGroupList,
+		"permission":            permissionList,
 	})
 }

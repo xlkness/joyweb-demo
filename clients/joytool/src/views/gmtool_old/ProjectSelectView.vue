@@ -27,7 +27,8 @@
 
 <script lang="ts">
 import {defineComponent, ref} from "vue";
-import ProjectShowView from "@/views/gmtool/ProjectShowView.vue";
+import ProjectShowView from "@/views/gmtool_old/ProjectShowView.vue";
+import {gmtool} from "@/requests/gmtool";
 
 export default defineComponent({
   props: ['project', 'currentComponent',],

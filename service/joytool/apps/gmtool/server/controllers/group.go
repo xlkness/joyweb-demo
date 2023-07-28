@@ -7,7 +7,7 @@ import (
 )
 
 func (ctl *Controllers) PermissionGroupList(ctx *model.MyContext, req *request.PermissionGroupList) {
-	_, err := ctl.UserSvc.GetUserInfo(nil, &api_user.GetUserInfoReq{UserName: ctx.GetUserName()})
+	_, err := ctl.UserSvc.GetUserInfo(nil, &api_user.GetUserInfoReq{UserName: ctx.GetUserName(), System: "gmtool"})
 	if err != nil {
 		ctx.RespFailMessage(300, err.Error())
 		return

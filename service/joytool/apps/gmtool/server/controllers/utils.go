@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"joytool/apps/gmtool/model"
+	"joytool/apps/user/api_user"
 	"net/http"
 	"strconv"
 )
@@ -24,9 +26,49 @@ type Field struct {
 	Default  any      `json:"default"`
 }
 type Command struct {
-	Name   string   `json:"name"` // 路径
-	Desc   string   `json:"desc"`
-	Fields []*Field `json:"fields"`
+	Name       string   `json:"name"` // 路径
+	Desc       string   `json:"desc"`
+	AccessMode int      `json:"access_mode"` // 1-read|2-write
+	Action     string   `json:"action"`
+	Fields     []*Field `json:"fields"`
+}
+
+func (ctl *Controllers) AdminPermission(ctx *model.MyContext) (bool, error) {
+	userName := ctx.GetUserName()
+	userInfo, err := ctl.UserSvc.GetUserInfo(nil, &api_user.GetUserInfoReq{UserName: userName, System: "gmtool"})
+	if err != nil {
+		return false, err
+	}
+
+	return userInfo.IsAdmin, nil
+}
+
+func (ctl *Controllers) execPermission(ctx *model.MyContext, project, env, cmdServer, action string) (bool, error) {
+	adminPermission, err := ctl.AdminPermission(ctx)
+	if err != nil {
+		return false, err
+	}
+	if adminPermission {
+		return true, nil
+	}
+	userName := ctx.GetUserName()
+	userInfo, err := ctl.UserSvc.GetUserInfo(nil, &api_user.GetUserInfoReq{UserName: userName, System: "gmtool"})
+	if err != nil {
+		return false, err
+	}
+
+	permissionGroup, find := ctl.Db.GetPermissionGroup(project, userInfo.Group)
+	if !find {
+		return false, fmt.Errorf("没有找到项目%v权限组%v", project, userInfo.Group)
+	}
+
+	for _, p := range permissionGroup.Permissions {
+		if p.Env == env && p.CommandServer == cmdServer && p.Action == action {
+			return true, nil
+		}
+	}
+
+	return false, nil
 }
 
 func queryCommandServerCommandList(addr string) ([]*Command, error) {
@@ -37,6 +79,15 @@ func queryCommandServerCommandList(addr string) ([]*Command, error) {
 		err := httpGet(url, resp)
 		if err != nil {
 			return nil, err
+		}
+
+		for _, cmd := range resp.Data {
+			switch cmd.AccessMode {
+			case 1:
+				cmd.Action = "read"
+			case 2:
+				cmd.Action = "write"
+			}
 		}
 
 		return resp.Data, nil

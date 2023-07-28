@@ -72,8 +72,7 @@ func (myCtx *MyContext) respJsonPAny(code int, contentCode int, payload any) {
 }
 
 func (myCtx *MyContext) GetUserName() string {
-	tokenStr := myCtx.GetGinContext().Request.Header.Get("x-token")
-	checkedToken, _ := token.ValidToken(tokenStr)
-	checkedClaims := checkedToken.Claims.(*token.RegisteredTokenClaims)
-	return checkedClaims.User
+	checkedClaims, _ := myCtx.GetGinContext().Get("claims")
+	//checkedClaims := myCtx.GetGinContext().Request.Context().Value("claims").(*token.RegisteredTokenClaims)
+	return checkedClaims.(*token.RegisteredTokenClaims).User
 }

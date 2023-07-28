@@ -65,6 +65,14 @@ func (ctl *Controllers) ExecCommand(ctx *model.MyContext, params *request.ExecCo
 					break
 				}
 			}
+
+			if ok, err := ctl.execPermission(ctx, params.Project, params.Env, params.CommandServerName, queryCmd.Action); err != nil {
+				ctx.RespFailMessage(300, err.Error())
+				return
+			} else if !ok {
+				ctx.RespFailMessage(300, fmt.Sprintf("您无权执行这个命令！"))
+				return
+			}
 		}
 	}
 

@@ -56,7 +56,8 @@ func jwtMiddleWare() func(ctx *model.MyContext) {
 			tokenStr, checkedClaims.User, checkedClaims.ExpiresAt, checkedClaims.Issuer)
 
 		// 校验token是否白名单
-
+		c.Set("claims", checkedClaims)
+		//c.Request.WithContext(context.WithValue(context.Background(), "claims", checkedClaims))
 		c.Next()
 	}
 }

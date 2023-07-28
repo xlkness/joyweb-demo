@@ -14,7 +14,7 @@ import "element-plus/theme-chalk/el-message-box.css"
 
 // 导入icon图标
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-import EnvView from "@/views/gmtool/EnvView.vue";
+import EnvView from "@/views/gmtool_old/EnvView.vue";
 
 const app = createApp(App)
 

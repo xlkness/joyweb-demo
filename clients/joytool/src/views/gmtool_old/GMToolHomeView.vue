@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import {defineComponent, ref, watch} from "vue";
-import ProjectSelectView from "@/views/gmtool/ProjectSelectView.vue";
+import ProjectSelectView from "@/views/gmtool_old/ProjectSelectView.vue";
 
 export default defineComponent({
   setup() {

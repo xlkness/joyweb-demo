@@ -56,7 +56,7 @@
 import {defineComponent, ref} from "vue";
 import {createUser, editUser, listUsers} from "@/requests/user";
 import {ElNotification, FormInstance} from "element-plus";
-import ProjectSelectView from "@/views/gmtool/ProjectSelectView.vue";
+import ProjectSelectView from "@/views/gmtool_old/ProjectSelectView.vue";
 
 export default defineComponent({
   props: ['subsystem', 'subsystemName', 'subsystemGroups', 'dialogUserData', 'dialogAddUserVisible', 'userList'],

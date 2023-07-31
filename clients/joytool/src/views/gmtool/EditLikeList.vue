@@ -86,11 +86,12 @@ import {defineComponent, ref} from "vue";
 import {dislikeCommand, gmtool} from "@/requests/gmtool";
 import {ElNotification} from "element-plus";
 import CmdExecuteWithHistory from "@/components/gmtool/CmdExecuteWithHistory.vue";
+import {useRouter} from "vue-router";
 
 export default defineComponent({
-  props: ['project'],
-  setup(props) {
-    const project = props.project
+  setup() {
+    const useRoute = useRouter()
+    const project = useRoute.currentRoute.value.query.project
     var likeRecordList = ref([])
     const dialogData = ref({
       execShowVisible: false,

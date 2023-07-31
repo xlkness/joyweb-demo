@@ -90,12 +90,12 @@ import EnvView from "@/components/gmtool/EnvView.vue";
 import {ElNotification} from "element-plus";
 import {Delete} from "@element-plus/icons-vue";
 import CmdExecuteWithHistory from "@/components/gmtool/CmdExecuteWithHistory.vue";
+import {useRouter} from "vue-router";
 
 export default defineComponent({
-  components: {Delete},
-  props: ['project'],
-  setup(props) {
-    const project = props.project
+  setup() {
+    const useRoute = useRouter()
+    const project = useRoute.currentRoute.value.query.project
     var historyRecordList = ref([])
     const dialogData = ref({
       execShowVisible: false,

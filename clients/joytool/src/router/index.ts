@@ -1,12 +1,18 @@
 import {createRouter, createWebHashHistory, createWebHistory, RouteRecordRaw} from 'vue-router'
 import UserView from "@/views/user/UserView.vue";
 import LoginView from "@/views/LoginView.vue";
-import NewHomeView from "@/views/NewHomeView.vue";
 import GMToolHomeView from "@/views/gmtool_old/GMToolHomeView.vue";
 import GMToolMenuItem from "@/views/gmtool_old/GMToolMenuItem.vue";
 import UserListView from "@/views/user/UserListView.vue";
 import TestView from "@/views/TestView.vue";
 import HomeView from "@/views/HomeView.vue";
+import EnvViews from "@/views/gmtool/EnvViews.vue";
+import EditEnvListView from "@/views/gmtool/EditEnvListView.vue";
+import EditCmdServerListView from "@/views/gmtool/EditCmdServerListView.vue";
+import EditLikeList from "@/views/gmtool/EditLikeList.vue";
+import EditExecHistoryList from "@/views/gmtool/EditExecHistoryList.vue";
+import PermissionGroupList from "@/views/gmtool/PermissionGroupList.vue";
+import UserList from "@/views/gmtool/UserList.vue";
 
 const getGMToolChildrenMenuItems = (enProject: string, project: string) => {
   const query = () => {
@@ -23,7 +29,7 @@ const getGMToolChildrenMenuItems = (enProject: string, project: string) => {
         "name": "指令服操作",
         "icon": "Tools",
       },
-      component: TestView,
+      component: EnvViews,
       query: query(),
     },
     {
@@ -33,7 +39,7 @@ const getGMToolChildrenMenuItems = (enProject: string, project: string) => {
         "name": "环境管理",
         "icon": "Tools",
       },
-      component: TestView,
+      component: EditEnvListView,
       query: query(),
     },
     {
@@ -43,7 +49,7 @@ const getGMToolChildrenMenuItems = (enProject: string, project: string) => {
         "name": "指令服管理",
         "icon": "Tools",
       },
-      component: TestView,
+      component: EditCmdServerListView,
       query: query(),
     },
     {
@@ -53,7 +59,7 @@ const getGMToolChildrenMenuItems = (enProject: string, project: string) => {
         "name": "收藏管理",
         "icon": "Tools",
       },
-      component: TestView,
+      component: EditLikeList,
       query: query(),
     },
     {
@@ -63,7 +69,7 @@ const getGMToolChildrenMenuItems = (enProject: string, project: string) => {
         "name": "执行历史管理",
         "icon": "Tools",
       },
-      component: TestView,
+      component: EditExecHistoryList,
       query: query(),
     },
     {
@@ -73,17 +79,17 @@ const getGMToolChildrenMenuItems = (enProject: string, project: string) => {
         "name": "权限组管理",
         "icon": "Tools",
       },
-      component: TestView,
+      component: PermissionGroupList,
       query: query(),
     },
     {
       path: "/" + enProject + "/gmtool/user_list",
       meta: {
         key: enProject + "/gmtool/user_list",
-        "name": "用户管理",
+        "name": "用户列表",
         "icon": "Tools",
       },
-      component: TestView,
+      component: UserList,
       query: query(),
     },
   ]
@@ -137,40 +143,45 @@ export let homeRoutes = [
       },
     ],
   },
-  {
-    path: "/test",
-    component: TestView,
-    meta: {
-      name: "/test1",
-      project: "足球",
-      name: "test1",
-      icon: "Tools",
-    },
-    query: {
-      project: "足球",
-      t: Date.now(),
-    }
-  },
-  {
-    path: "/test",
-    meta: {
-      "key": "test2",
-      project: "SIM",
-      name: "test2",
-      icon: "Tools",
-    },
-    component: TestView,
-    query: {
-      project: "SIM",
-      t: Date.now()
-    }
-  }
+  // {
+  //   path: "/test1",
+  //   name: "test1",
+  //   component: TestView,
+  //   meta: {
+  //     key: "test1",
+  //     project: "足球",
+  //     name: "test1",
+  //     icon: "User",
+  //   },
+  //   query: {
+  //     project: "足球",
+  //     t: Date.now(),
+  //   }
+  // },
+  // {
+  //   path: "/test2",
+  //   name: "test2",
+  //   meta: {
+  //     "key": "test2",
+  //     project: "SIM",
+  //     name: "test2",
+  //     icon: "Tools",
+  //   },
+  //   component: TestView,
+  //   query: {
+  //     project: "SIM",
+  //     t: Date.now()
+  //   }
+  // }
 ]
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     redirect: '/login',
+    // name: 'home1',
+    // component: HomeView,
+    // children: homeRoutes,
   },
   {
     path: '/home',
@@ -186,7 +197,8 @@ const routes: Array<RouteRecordRaw> = [
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(process.env.BASE_URL),
+  history: createWebHistory(process.env.BASE_URL),
+  // history: createWebHashHistory(process.env.BASE_URL),
   routes
 })
 

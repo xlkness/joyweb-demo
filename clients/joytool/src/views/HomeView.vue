@@ -2,7 +2,7 @@
   <div>
     <el-container>
       <el-header>
-        <HeaderView/>
+        <HeaderView username="admin"/>
       </el-header>
       <el-container>
         <el-aside>
@@ -16,7 +16,7 @@
           >
             <!--最多支持3层前套-->
             <template v-for="(routeItem, idx) in routeList">
-              <el-sub-menu :index="routeItem.meta.name" v-if="(routeItem.children && routeItem.children.length > 0)">
+              <el-sub-menu class="sub-menu" :index="routeItem.meta.name + String(idx)" v-if="(routeItem.children && routeItem.children.length > 0)">
                 <template #title>
                   <el-icon>
                     <component :is="routeItem.meta.icon"></component>
@@ -25,7 +25,7 @@
                 </template>
                 <template v-for="(subRouteItem, idx1) in routeItem.children">
                   <el-menu-item :index="subRouteItem.path"
-                                :route="{query: subRouteItem.query}"
+                                :route="{path: subRouteItem.path, query: subRouteItem.query}"
                                 :title="subRouteItem.meta.name"
                                 v-if="!subRouteItem.children || subRouteItem.children.length <= 0">
                     <el-icon>
@@ -34,7 +34,7 @@
                     <span>{{subRouteItem.meta.name}}</span>
                   </el-menu-item>
 
-                  <el-sub-menu :index="subRouteItem.meta.name" v-else>
+                  <el-sub-menu class="sub-menu" :index="subRouteItem.meta.name + String(idx1)" v-else>
                     <template #title>
                       <el-icon>
                         <component :is="subRouteItem.meta.icon"></component>
@@ -43,7 +43,7 @@
                     </template>
                     <el-menu-item v-for="(subSubRouteItem, idx2) in subRouteItem.children"
                                   :index="subSubRouteItem.path"
-                                  :route="{query: subSubRouteItem.query}"
+                                  :route="{path: subSubRouteItem.path, query: subSubRouteItem.query}"
                                   :title="subSubRouteItem.meta.name">
                       <el-icon>
                         <component class="el-icon" :is="subSubRouteItem.meta.icon"></component>
@@ -54,7 +54,7 @@
                 </template>
               </el-sub-menu>
 
-              <el-menu-item :index="routeItem.path" :route="{query: routeItem.query}" v-else>
+              <el-menu-item :index="routeItem.path" :route="{path: routeItem.path, query: routeItem.query}" v-if="!routeItem.children || routeItem.children.length == 0">
                 <el-icon>
                   <component class="el-icon" :is="routeItem.meta.icon"></component>
                 </el-icon>
@@ -64,7 +64,7 @@
           </el-menu>
         </el-aside>
         <el-main>
-          <router-view :key="routerKey" :to="router.currentRoute.value.query"></router-view>
+          <router-view :key="routerKey"></router-view>
         </el-main>
       </el-container>
     </el-container>
@@ -88,11 +88,40 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 
 .el-header {
   height: 8vh;
   background-color: white;
+}
+
+:deep() {
+  .el-sub-menu__title {
+    font-size: 30px !important;
+    background-color: #ffffff !important;
+  }
+  .el-sub-menu__title:hover {
+    outline: 0 !important;
+    color: white !important;
+    //border-radius: 5%;
+    background-color: #445ebf !important;
+  }
+
+  .el-menu-item {
+    font-size: 30px;
+    background-color: #ffffff !important;
+  }
+
+  .el-menu-item:hover {
+    outline: 0 !important;
+    color: white !important;
+    //border-radius: 6%;
+    background-color: #445ebf !important;
+  }
+
+  .el-menu-item.is-active {
+    color: #1890ff !important;
+  }
 }
 
 </style>

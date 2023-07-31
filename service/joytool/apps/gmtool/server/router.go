@@ -48,7 +48,8 @@ func (s *Server) registerMethod(method, path, desc string, dataReceiver interfac
 	newHandler := handler
 	if needAdmin {
 		newHandler = func(ctx *model.MyContext, params any) {
-			if ok, err := s.ctl.AdminPermission(ctx); err != nil {
+			project := reflect.ValueOf(params).FieldByName("Project").String()
+			if ok, err := s.ctl.AdminPermission(project, ctx); err != nil {
 				ctx.RespFailMessage(300, err.Error())
 				return
 			} else if !ok {

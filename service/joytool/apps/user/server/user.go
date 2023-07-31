@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"joytool/apps/user/api_user"
 	"joytool/apps/user/model"
 	"joytool/apps/user/model/request"
 	"joytool/lib/token"
@@ -69,9 +70,17 @@ func (s *Server) Login(ctx *model.MyContext, loginData *request.LoginData) {
 			tokenStr, checkedClaims.User, checkedClaims.ExpiresAt, checkedClaims.Issuer)
 	}
 
+	userInfo := &api_user.GetUserInfoRes{}
+	err = s.svc.GetUserInfo(nil, &api_user.GetUserInfoReq{UserName: userData.UserName, System: "user"}, userInfo)
+	if err != nil {
+		ctx.RespFailMessage(300, err.Error())
+		return
+	}
+
 	resp := map[string]interface{}{
 		"username": userData.UserName,
 		"token":    tokenStr,
+		"is_admin": userInfo.IsAdmin,
 	}
 	ctx.RespSuccessJson(resp)
 }

@@ -1,7 +1,9 @@
 <template>
-  <el-container>
+  <el-empty description="当前组权限不足无法查看！" v-if="(permission == false)">
+  </el-empty>
+  <el-container v-else>
     <el-header>
-      <el-button @click="dialogOperationVisible = true" size="large" type="primary">添加环境</el-button>
+      <el-button @click="dialogOperationVisible = true" size="large" type="primary">添加执行组</el-button>
     </el-header>
     <el-main>
       <el-table :data="permissionGroupList" :default-sort="{prop:'index', order: 'ascending'}"  table-layout="auto" stripe style="width: 98vh;height: 60vh">
@@ -68,17 +70,19 @@ import {defineComponent, ref} from "vue";
 import {createPermissionGroup, deleteEnv, deletePermissionGroup, editPermissionGroup, gmtool} from "@/requests/gmtool";
 import EnvView from "@/components/gmtool/EnvView.vue";
 import {FormInstance, ElTree, ElNotification} from "element-plus";
+import {useRouter} from "vue-router";
 
 export default defineComponent({
-  props: ['project'],
-  setup(props) {
-    const project = props.project
+  setup() {
+    const useRoute = useRouter()
+    const project = useRoute.currentRoute.value.query.project
     const permissionGroupList = ref([])
 
     const treeRef = ref<InstanceType<typeof ELTree>>()
     const tree = ref([])
     const duplicateRecords = {}
     const permissionsConfRecords = []
+    const permission = ref(false)
 
     gmtool({project: project}).then((res)=> {
       // 获取到gmtool信息，刷新页面
@@ -89,6 +93,10 @@ export default defineComponent({
       for (let i=0; res.payload.permission_group_list && i<res.payload.permission_group_list.length; i++) {
         const curPermissionGroup = res.payload.permission_group_list[i]
         permissionGroupList.value.push(curPermissionGroup)
+      }
+
+      if (res.payload.is_admin) {
+        permission.value = true
       }
 
       let envIncrID = 1
@@ -283,7 +291,7 @@ export default defineComponent({
       })
     }
 
-    return {project, permissionGroupList, dialogOperationVisible, dialogOperationFormRef, dialogOperationFormData,
+    return {permission, project, permissionGroupList, dialogOperationVisible, dialogOperationFormRef, dialogOperationFormData,
       handleCloseDialog, handleEdit, handleDelete, treeRef, tree, handleCheckChange, submitOperation}
   }
 })

@@ -9,7 +9,7 @@
           prop="username"
           :rules="{required: true, message: '必填', trigger: 'blur'}"
       >
-        <el-input v-model="dialogAddFormData.username" :disabled="dialogAddFormData.username"></el-input>
+        <el-input v-model="dialogAddFormData.username" :disabled="dialogAddFormData.usernameDisabled"></el-input>
       </el-form-item>
       <el-form-item
           label="密码"
@@ -74,6 +74,7 @@ export default defineComponent({
       passwd: dialogUserData.oldData.password || '',
       isAdmin: false,
       group: '',
+      usernameDisabled: dialogUserData.oldData && dialogUserData.oldData.username,
     })
 
     console.log('old data', dialogUserData.oldData)

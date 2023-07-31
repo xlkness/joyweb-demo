@@ -189,7 +189,7 @@ import CmdExecute from "@/components/gmtool/CmdExecute.vue";
 import CmdExecuteWithHistory from "@/components/gmtool/CmdExecuteWithHistory.vue";
 
 export default defineComponent({
-  props: ['project', 'curEnv', 'commandServerList', 'envList', 'likeList'],
+  props: ['project', 'curEnv', 'commandServerList', 'envList', 'likeList', 'permissionList'],
   setup(props) {
 
     // console.log("refresh env view")
@@ -198,18 +198,23 @@ export default defineComponent({
     const allCommandServerList = props.commandServerList || []
     const allEnvs = props.envList
     const likeList = props.likeList
+    const permissionList = props.permissionList || []
     const gmServerTableData = ref([])
 
     // 初始化指令服务器列表
     for (let i=0; i < allCommandServerList.length; i++) {
       for (let j=0; allCommandServerList[i].envs && j < allCommandServerList[i].envs.length; j++) {
-        if (curEnv == allCommandServerList[i].envs[j]) {
-          gmServerTableData.value.push({
-            "name": allCommandServerList[i].name,
-            "addr": allCommandServerList[i].addr,
-            "desc": allCommandServerList[i].desc,
-            "detail": allCommandServerList[i],
-          })
+        for (let k=0; k<permissionList.length; k++) {
+          if (curEnv == allCommandServerList[i].envs[j] &&
+              permissionList[k].command_server == allCommandServerList[i].name) {
+            gmServerTableData.value.push({
+              "name": allCommandServerList[i].name,
+              "addr": allCommandServerList[i].addr,
+              "desc": allCommandServerList[i].desc,
+              "detail": allCommandServerList[i],
+            })
+            break
+          }
         }
       }
     }
@@ -340,6 +345,7 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+
 
 </style>

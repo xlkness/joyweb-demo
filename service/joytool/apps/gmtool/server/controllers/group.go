@@ -7,14 +7,18 @@ import (
 )
 
 func (ctl *Controllers) PermissionGroupList(ctx *model.MyContext, req *request.PermissionGroupList) {
-	_, err := ctl.UserSvc.GetUserInfo(nil, &api_user.GetUserInfoReq{UserName: ctx.GetUserName(), System: "gmtool"})
+	userInfo, err := ctl.UserSvc.GetUserInfo(nil, &api_user.GetUserInfoReq{UserName: ctx.GetUserName(), System: req.Project + "-gmtool"})
 	if err != nil {
 		ctx.RespFailMessage(300, err.Error())
 		return
 	}
 
-	list := ctl.Db.PermissionGroupList(req.Project)
-	ctx.RespSuccessJson(list)
+	permissionList, _ := ctl.Db.GetPermissionGroup(req.Project, userInfo.Group)
+
+	ctx.RespSuccessJson(map[string]interface{}{
+		"permission_list": permissionList,
+		"is_admin":        userInfo.IsAdmin,
+	})
 }
 
 func (ctl *Controllers) CreatePermissionGroup(ctx *model.MyContext, req *request.PermissionGroupData) {

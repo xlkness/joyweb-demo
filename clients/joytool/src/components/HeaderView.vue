@@ -14,12 +14,14 @@
       <el-col :span="5" :offset="6">
         <el-row>
           <el-col :span="8">
-            <el-icon size="8vh" color="#65d9d6">
-              <Help></Help>
-            </el-icon>
+<!--            <el-icon size="8vh" color="#65d9d6">-->
+<!--              <Help></Help>-->
+<!--            </el-icon>-->
+<!--            <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>-->
+            <el-avatar :icon="UserFilled" :size="60"></el-avatar>
           </el-col>
           <el-col :span="8">
-            <p style="font-size: 3vh;margin-top: 25px">admin</p>
+            <span>{{username}}</span>
           </el-col>
           <el-col :span="8">
 
@@ -32,12 +34,18 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
-import {Help, HomeFilled} from "@element-plus/icons-vue";
+import {Help, HomeFilled, UserFilled} from "@element-plus/icons-vue";
 
 export default defineComponent({
-  components: {Help, HomeFilled},
-  setup() {
-    return {}
+  computed: {
+    UserFilled() {
+      return UserFilled
+    }
+  },
+  props: ["username"],
+  setup(props) {
+    const username = props.username || "guest"
+    return {username}
   }
 })
 </script>

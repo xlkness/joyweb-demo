@@ -53,9 +53,13 @@ import OperateUser from "@/components/user/OperateUser.vue";
 export default defineComponent({
   props: ['subsystem', 'subsystemName', 'subsystemGroups'],
   setup(props) {
+
     const subsystem = props.subsystem || "user"
     const subsystemName = props.subsystemName || "用户系统"
     const subsystemGroups = props.subsystemGroups || ["用户管理员", "普通用户"]
+    // console.log("sub system:", subsystem, props.subsystem)
+    // console.log("sub system name:", subsystemName, props.subsystemName)
+    // console.log("groups:", subsystemGroups, props.subsystemGroups,)
 
     const userList = ref([])
     listUsers().then((res) => {
@@ -72,6 +76,7 @@ export default defineComponent({
     })
 
     const handleAddUser = () => {
+      dialogUserData.value.oldData = {}
       dialogAddUserVisible.value = true
     }
     const handleEditUser = (index, row) => {

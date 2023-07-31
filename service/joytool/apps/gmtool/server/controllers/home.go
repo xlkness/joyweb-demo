@@ -14,7 +14,7 @@ func (ctl *Controllers) HomeView(ctx *model.MyContext, params *request.HomeView)
 		return
 	}
 
-	userInfo, err := ctl.UserSvc.GetUserInfo(nil, &api_user.GetUserInfoReq{UserName: ctx.GetUserName(), System: "gmtool"})
+	userInfo, err := ctl.UserSvc.GetUserInfo(nil, &api_user.GetUserInfoReq{UserName: ctx.GetUserName(), System: params.Project + "-gmtool"})
 	if err != nil {
 		ctx.RespFailMessage(300, err.Error())
 		return
@@ -35,7 +35,7 @@ func (ctl *Controllers) HomeView(ctx *model.MyContext, params *request.HomeView)
 		return envs[i].Index < envs[j].Index
 	})
 
-	likeList, _ := ctl.Db.LikeCommandList(params.Project, "test")
+	likeList, _ := ctl.Db.LikeCommandList(params.Project, userInfo.UserName)
 	sort.SliceStable(likeList, func(i, j int) bool {
 		return likeList[i].Command.Date < likeList[j].Command.Date
 	})
@@ -50,5 +50,6 @@ func (ctl *Controllers) HomeView(ctx *model.MyContext, params *request.HomeView)
 		"like_list":             likeList,
 		"permission_group_list": permissionGroupList,
 		"permission":            permissionList,
+		"is_admin":              userInfo.IsAdmin,
 	})
 }

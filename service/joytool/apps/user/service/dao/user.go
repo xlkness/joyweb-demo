@@ -33,6 +33,9 @@ func (d *Dao) UserList() ([]*doUser.User, error) {
 	list := d.userList.GetList()
 	list1 := make([]*doUser.User, 0, len(list))
 	for _, v := range list {
+		if v.Data.UserName == "admin" {
+			continue
+		}
 		list1 = append(list1, v.Data)
 	}
 	return list1, nil

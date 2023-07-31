@@ -1,6 +1,8 @@
 <template>
   <div>
-    <el-container>
+    <el-empty description="当前组权限不足无法查看！" v-if="(permission == false)">
+    </el-empty>
+    <el-container v-else>
       <el-header>
         <el-button @click="dialogAddVisible = true" size="large" type="primary">添加环境</el-button>
       </el-header>
@@ -98,11 +100,12 @@
 import {defineComponent, ref} from "vue";
 import {addCmdServer, addEnv, deleteEnv, editCmdServer, editEnv, gmtool} from "@/requests/gmtool";
 import {ElNotification, FormInstance} from "element-plus";
+import {useRouter} from "vue-router";
 
 export default defineComponent({
-  props: ['project'],
-  setup(props) {
-    const project = props.project
+  setup() {
+    const useRoute = useRouter()
+    const project = useRoute.currentRoute.value.query.project
     const dialogAddVisible = ref(false)
     const dialogEditVisible = ref(false)
     const dialogAddFormRef =  ref<FormInstance>()
@@ -128,6 +131,7 @@ export default defineComponent({
 
     var commandServerList = ref([])
     var envList = ref([])
+    const permission = ref(false)
 
     gmtool({project: project}).then((res)=> {
       // 获取到gmtool信息，刷新页面
@@ -139,6 +143,9 @@ export default defineComponent({
       }
       for (let i=0; i < envListTmp.length; i++) {
         envList.value.push(envListTmp[i])
+      }
+      if (res.payload.is_admin) {
+        permission.value = true
       }
     }, (err) => {
       console.log("request error:", err)
@@ -243,6 +250,7 @@ export default defineComponent({
     }
 
     return {
+      permission,
       dialogAddVisible,
       dialogEditVisible,
       handleCloseDialog,

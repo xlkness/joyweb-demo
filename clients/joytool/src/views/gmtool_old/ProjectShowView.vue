@@ -33,13 +33,13 @@
 <script lang="ts">
 import {defineComponent, ref} from "vue";
 import ProjectSelectView from "@/views/gmtool_old/ProjectSelectView.vue";
-import EnvViews from "@/components/gmtool/EnvViews.vue";
-import EditCmdServerListView from "@/components/gmtool/EditCmdServerListView.vue";
-import EditEnvListView from "@/components/gmtool/EditEnvListView.vue";
-import EditLikeList from "@/components/gmtool/EditLikeList.vue";
-import EditExecHistoryList from "@/components/gmtool/EditExecHistoryList.vue";
+import EnvViews from "@/views/gmtool/EnvViews.vue";
+import EditCmdServerListView from "@/views/gmtool/EditCmdServerListView.vue";
+import EditEnvListView from "@/views/gmtool/EditEnvListView.vue";
+import EditLikeList from "@/views/gmtool/EditLikeList.vue";
+import EditExecHistoryList from "@/views/gmtool/EditExecHistoryList.vue";
 import UserList from "@/components/user/UserList.vue";
-import PermissionGroupList from "@/components/gmtool/PermissionGroupList.vue";
+import PermissionGroupList from "@/views/gmtool/PermissionGroupList.vue";
 import {gmtool, permissionGroupList} from "@/requests/gmtool";
 
 export default defineComponent({

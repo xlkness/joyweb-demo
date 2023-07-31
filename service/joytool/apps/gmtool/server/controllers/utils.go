@@ -33,9 +33,9 @@ type Command struct {
 	Fields     []*Field `json:"fields"`
 }
 
-func (ctl *Controllers) AdminPermission(ctx *model.MyContext) (bool, error) {
+func (ctl *Controllers) AdminPermission(project string, ctx *model.MyContext) (bool, error) {
 	userName := ctx.GetUserName()
-	userInfo, err := ctl.UserSvc.GetUserInfo(nil, &api_user.GetUserInfoReq{UserName: userName, System: "gmtool"})
+	userInfo, err := ctl.UserSvc.GetUserInfo(nil, &api_user.GetUserInfoReq{UserName: userName, System: project + "-gmtool"})
 	if err != nil {
 		return false, err
 	}
@@ -44,7 +44,7 @@ func (ctl *Controllers) AdminPermission(ctx *model.MyContext) (bool, error) {
 }
 
 func (ctl *Controllers) execPermission(ctx *model.MyContext, project, env, cmdServer, action string) (bool, error) {
-	adminPermission, err := ctl.AdminPermission(ctx)
+	adminPermission, err := ctl.AdminPermission(project, ctx)
 	if err != nil {
 		return false, err
 	}
@@ -52,7 +52,7 @@ func (ctl *Controllers) execPermission(ctx *model.MyContext, project, env, cmdSe
 		return true, nil
 	}
 	userName := ctx.GetUserName()
-	userInfo, err := ctl.UserSvc.GetUserInfo(nil, &api_user.GetUserInfoReq{UserName: userName, System: "gmtool"})
+	userInfo, err := ctl.UserSvc.GetUserInfo(nil, &api_user.GetUserInfoReq{UserName: userName, System: project + "-gmtool"})
 	if err != nil {
 		return false, err
 	}

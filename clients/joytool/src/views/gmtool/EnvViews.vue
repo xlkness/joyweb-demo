@@ -58,7 +58,7 @@ export default defineComponent({
           })
           continue
         }
-        for (let j=0; j<res.payload.permission.permissions.length; j++) {
+        for (let j=0; res.payload.permission && res.payload.permission.permissions && j<res.payload.permission.permissions.length; j++) {
           if (res.payload.permission.permissions[j].env == envList[i].name) {
             envTabs.value.push({
               "title": String(envList[i].name),

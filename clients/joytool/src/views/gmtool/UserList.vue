@@ -25,7 +25,7 @@ export default defineComponent({
     const permission = ref(false)
 
     permissionGroupList({project: project}).then((res)=>{
-      if (res.payload.permission_list.length > 0) {
+      if (res.payload.permission_list && res.payload.permission_list.length > 0) {
         subsystemGroups.value = []
         res.payload.permission_list.forEach(function (value, index, obj) {
           subsystemGroups.value.push(value.name)

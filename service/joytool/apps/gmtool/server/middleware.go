@@ -30,11 +30,7 @@ func jwtMiddleWare() func(ctx *model.MyContext) {
 		//return
 		if tokenStr == "" {
 			fmt.Printf("path(%v) not found token:%v\n", c.Request.URL.Path, c.Request.Header)
-			c.JSON(300, map[string]interface{}{
-				"code":    300,
-				"message": "token is empty",
-				"payload": nil,
-			})
+			ctx.RespFailMessage(300, "token is empty")
 			c.Abort()
 			return
 		}
@@ -42,11 +38,7 @@ func jwtMiddleWare() func(ctx *model.MyContext) {
 		checkedToken, err := token.ValidToken(tokenStr)
 		if err != nil {
 			fmt.Printf("valid token(%v) not pass, error:%v\n", tokenStr, err)
-			c.JSON(300, map[string]interface{}{
-				"code":    300,
-				"message": err.Error(),
-				"payload": nil,
-			})
+			ctx.RespFailMessage(300, "token is invalid")
 			c.Abort()
 			return
 		}

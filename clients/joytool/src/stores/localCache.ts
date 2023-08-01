@@ -17,7 +17,7 @@ class LocalCache {
     }
     // 清理
     clearCache() {
-        window.localStorage.clear()
+        // window.localStorage.clear()
     }
 }
 

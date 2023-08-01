@@ -16,7 +16,7 @@
           prop="passwd"
           :rules="{required: true, message: '必填', trigger: 'blur'}"
       >
-        <el-input type="password" v-model="dialogAddFormData.passwd"></el-input>
+        <el-input type="password" show-password v-model="dialogAddFormData.passwd"></el-input>
       </el-form-item>
       <el-form-item
           label="是否管理员"

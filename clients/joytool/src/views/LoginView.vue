@@ -7,7 +7,6 @@
             :model="ruleForm"
             status-icon
             :rules="rules"
-            label-width="auto"
             class="form"
         >
           <el-form-item class="form-item" prop="username">
@@ -65,6 +64,7 @@ import type { FormInstance } from "element-plus";
 import {login} from '../requests/user';
 import {useRouter} from "vue-router";
 import LocalCache from "@/stores/localCache";
+import ExpireCache from "@/stores/expireCache";
 
 export default defineComponent({
   mounted() {
@@ -118,12 +118,13 @@ export default defineComponent({
       // 对表单的内容进行验证
       formEl.validate((valid) => {
         if (valid) {
-          console.log('submit!')
           login({base_info: data.ruleForm}).then((res)=>{
-            console.log('login ok')
-            console.log(res);
             // 保存token，跳转
-            localStorage.setItem('token', res.payload.token)
+            // console.log('登陆成功，用户名：', res.payload.username)
+            // console.log('登陆成功，token：', res.payload.token)
+            LocalCache.setCache('token', res.payload.token)
+            LocalCache.setCache('userInfo', res.payload)
+            ExpireCache.setCache("token", res.payload.token, res.payload.expire)
             router.push('/home')
           }, (res) => {
             console.log("login response error:")

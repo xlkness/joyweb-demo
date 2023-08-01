@@ -1,5 +1,7 @@
 import axios from 'axios'
 import {ElMessageBox} from "element-plus";
+import LocalCache from "@/stores/localCache";
+import {useRouter} from "vue-router";
 
 // 创建axios实例
 const userService=axios.create({
@@ -27,18 +29,17 @@ const gmtoolService=axios.create({
 //     console.log(err)
 // })
 
-// 请求拦截
-userService.interceptors.request.use((config)=>{
+const reqInterceptor = (config)=>{
     config.headers=config.headers || {}
     if(localStorage.getItem('token')){
-        config.headers["x-token"]=localStorage.getItem('token') || ""
+        config.headers["x-token"]=LocalCache.getCache('token') || ""
     } else {
         console.log("not found local storage token")
     }
     return config
-})
-// 响应拦截
-userService.interceptors.response.use((res)=>{
+}
+
+const resInterceptor = (res)=>{
     const code:number=res.data.code
     if(code!=200) {
         console.log("interceptor err code", res)
@@ -50,7 +51,9 @@ userService.interceptors.response.use((res)=>{
     }
 
     return res.data
-}, (err)=>{
+}
+
+const resErrorInterceptor = (err)=>{
     console.log(err)
     const code:number = err.response && err.response.status || -1
     const message: string = err.response && err.response.data.message || err
@@ -59,41 +62,17 @@ userService.interceptors.response.use((res)=>{
         confirmButtonText: '知道了',
     })
     return Promise.reject(err)
-})
+}
 
 // 请求拦截
-gmtoolService.interceptors.request.use((config)=>{
-    config.headers=config.headers || {}
-    if(localStorage.getItem('token')){
-        config.headers["x-token"]=localStorage.getItem('token') || ""
-    } else {
-        // console.log("not found local storage token")
-    }
-    return config
-})
+userService.interceptors.request.use(reqInterceptor)
 // 响应拦截
-gmtoolService.interceptors.response.use((res)=>{
-    const code:number=res.data.code
-    if(code!=200) {
-        console.log("interceptor err code", res)
-        ElMessageBox.alert("请求服务器成功，但是逻辑错误:" + res.data.message, "服务器错误码" + code, {
-            type: "warning",
-            confirmButtonText: '知道了',
-        })
-        return Promise.reject(res.data)
-    }
+userService.interceptors.response.use(resInterceptor, resErrorInterceptor)
 
-    return res.data
-}, (err)=>{
-    console.log("err", err)
-    const code:number = err.response && err.response.status || -1
-    const message: string = err.response && err.response.data.message || err
-    ElMessageBox.alert(message, "请求服务器返回http错误码-" + code, {
-        type: "error",
-        confirmButtonText: '知道了',
-    })
-    return Promise.reject(err)
-})
+// 请求拦截
+gmtoolService.interceptors.request.use(reqInterceptor)
+// 响应拦截
+gmtoolService.interceptors.response.use(resInterceptor, resErrorInterceptor)
 
 export default {
     user: userService,

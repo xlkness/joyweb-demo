@@ -4,31 +4,44 @@ import (
 	"fmt"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"joytool/apps/user/model"
+	"joytool/lib/token"
 	"time"
 )
 
-func jwtMiddleWare() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		token := c.Request.Header.Get("x-token")
-		c.Next()
-		return
-		if c.Request.URL.Path != "/login" && token == "" {
+func jwtMiddleWare() func(ctx *model.MyContext) {
+	return func(ctx *model.MyContext) {
+		c := ctx.GetGinContext()
+
+		if c.Request.URL.Path == "/login" {
+			return
+		}
+
+		tokenStr := c.Request.Header.Get("x-token")
+		//c.Next()
+		//return
+		if tokenStr == "" {
 			fmt.Printf("path(%v) not found token:%v\n", c.Request.URL.Path, c.Request.Header)
-			c.JSON(300, map[string]interface{}{
-				"code":    300,
-				"message": "token is empty",
-				"payload": nil,
-			})
+			ctx.RespFailMessage(300, "token is empty")
 			c.Abort()
 			return
 		}
 
+		checkedToken, err := token.ValidToken(tokenStr)
+		if err != nil {
+			fmt.Printf("valid token(%v) not pass, error:%v\n", tokenStr, err)
+			ctx.RespFailMessage(300, "token is invalid")
+			c.Abort()
+			return
+		}
+
+		checkedClaims := checkedToken.Claims.(*token.RegisteredTokenClaims)
+		fmt.Printf("valid token(%v) pass, user:%v,  expire:%v, issuer:%v\n",
+			tokenStr, checkedClaims.User, checkedClaims.ExpiresAt, checkedClaims.Issuer)
+
 		// 校验token是否白名单
-
-		// todo：jwt校验token合法
-
-		// todo：jwt解析token中的uuid
-
+		c.Set("claims", checkedClaims)
+		//c.Request.WithContext(context.WithValue(context.Background(), "claims", checkedClaims))
 		c.Next()
 	}
 }

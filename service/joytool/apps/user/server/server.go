@@ -15,7 +15,8 @@ func NewServer(engine *lkit_go.WebEngine, svc *service.Service) *Server {
 	s.engine = engine
 	s.svc = svc
 
-	s.engine.GetGinEngine().Use(jwtMiddleWare()).Use(Cors())
+	s.engine.Use(jwtMiddleWare())
+	s.engine.GetGinEngine().Use(Cors())
 	s.initRouter()
 
 	return s

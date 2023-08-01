@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	lkit_go "github.com/xlkness/lkit-go"
+	"joytool/lib/token"
 )
 
 type MyContext struct {
@@ -25,27 +26,19 @@ func (myCtx *MyContext) RespSuccessJson(data interface{}) {
 	myCtx.respJsonAny(200, 200, data)
 }
 
-func (myCtx *MyContext) RespSuccessJsonP(data interface{}) {
-	myCtx.respJsonPAny(200, 200, data)
-}
-
 func (myCtx *MyContext) RespSuccessMessage(msg string) {
 	myCtx.respJsonAny(200, 200, msg)
 }
 func (myCtx *MyContext) RespFailJson(errCode int, data map[string]interface{}) {
-	myCtx.respJsonAny(300, errCode, data)
+	myCtx.respJsonAny(200, errCode, data)
 }
 
 func (myCtx *MyContext) RespFailMessage(errCode int, msg string) {
-	myCtx.respJsonAny(300, errCode, msg)
+	myCtx.respJsonAny(200, errCode, msg)
 }
 
 func (myCtx *MyContext) respJsonAny(code int, contentCode int, payload any) {
-	message := "ok"
-	if code != 200 {
-		message = payload.(string)
-		payload = nil
-	}
+	message, _ := payload.(string)
 	myCtx.GetGinContext().JSON(code, map[string]interface{}{
 		"code":    contentCode,
 		"message": message,
@@ -53,15 +46,8 @@ func (myCtx *MyContext) respJsonAny(code int, contentCode int, payload any) {
 	})
 }
 
-func (myCtx *MyContext) respJsonPAny(code int, contentCode int, payload any) {
-	message := "ok"
-	if code != 200 {
-		message = payload.(string)
-		payload = nil
-	}
-	myCtx.GetGinContext().JSONP(code, map[string]interface{}{
-		"code":    contentCode,
-		"message": message,
-		"payload": payload,
-	})
+func (myCtx *MyContext) GetUserName() string {
+	checkedClaims, _ := myCtx.GetGinContext().Get("claims")
+	//checkedClaims := myCtx.GetGinContext().Request.Context().Value("claims").(*token.RegisteredTokenClaims)
+	return checkedClaims.(*token.RegisteredTokenClaims).User
 }

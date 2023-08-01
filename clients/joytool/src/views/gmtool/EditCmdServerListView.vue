@@ -189,7 +189,7 @@ export default defineComponent({
         envList.value.push(envListTmp[i])
       }
 
-      console.log('permission', res.payload)
+      // console.log('permission', res.payload)
 
       if (res.payload.is_admin) {
         permission.value = true

@@ -39,6 +39,7 @@ func (s *Server) DeleteUser(ctx *model.MyContext, deleteData *request.DeleteUser
 
 const (
 	tokenExpireDura = time.Hour * 24 * 30
+	//tokenExpireDura = time.Second * 30
 )
 
 func (s *Server) Login(ctx *model.MyContext, loginData *request.LoginData) {
@@ -78,9 +79,11 @@ func (s *Server) Login(ctx *model.MyContext, loginData *request.LoginData) {
 	}
 
 	resp := map[string]interface{}{
-		"username": userData.UserName,
-		"token":    tokenStr,
-		"is_admin": userInfo.IsAdmin,
+		"username":  userData.UserName,
+		"token":     tokenStr,
+		"expire":    tokenExpireDura.Seconds(),
+		"expire_at": time.Now().Add(tokenExpireDura).Format(time.DateTime),
+		"is_admin":  userInfo.IsAdmin,
 	}
 	ctx.RespSuccessJson(resp)
 }
@@ -111,4 +114,9 @@ func (s *Server) ListUsers(ctx *model.MyContext) {
 	list, _ := s.svc.Dao.UserList()
 
 	ctx.RespSuccessJson(list)
+}
+
+func (s *Server) Logout(ctx *model.MyContext) {
+	fmt.Printf("user logout:%v\n", ctx.GetUserName())
+	ctx.RespSuccessMessage("ok")
 }

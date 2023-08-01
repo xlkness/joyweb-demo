@@ -62,3 +62,10 @@ export function login(data: loginData){
         data
     })
 }
+
+export function logout() {
+    return service.user({
+        url: "/logout",
+        method: "get",
+    })
+}

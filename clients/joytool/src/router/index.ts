@@ -13,6 +13,7 @@ import EditLikeList from "@/views/gmtool/EditLikeList.vue";
 import EditExecHistoryList from "@/views/gmtool/EditExecHistoryList.vue";
 import PermissionGroupList from "@/views/gmtool/PermissionGroupList.vue";
 import UserList from "@/views/gmtool/UserList.vue";
+import ExpireCache from "@/stores/expireCache";
 
 const getGMToolChildrenMenuItems = (enProject: string, project: string) => {
   const query = () => {
@@ -200,6 +201,21 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   // history: createWebHashHistory(process.env.BASE_URL),
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.path == "/login") {
+    next()
+  } else {
+    let token = ExpireCache.getCache("token")
+    if (!token) {
+      console.log("token is expired")
+      next('/login')
+    } else {
+      console.log("token is valid")
+      next()
+    }
+  }
 })
 
 export default router

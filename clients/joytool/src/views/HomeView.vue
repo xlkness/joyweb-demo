@@ -2,7 +2,7 @@
   <div>
     <el-container>
       <el-header>
-        <HeaderView username="admin"/>
+        <HeaderView :username="username"/>
       </el-header>
       <el-container>
         <el-aside>
@@ -75,6 +75,7 @@
 import {computed, defineComponent} from "vue";
 import {useRoute} from "vue-router";
 import router, {homeRoutes} from "@/router";
+import LocalCache from "@/stores/localCache";
 
 export default defineComponent({
   setup() {
@@ -83,7 +84,10 @@ export default defineComponent({
       return useRouter.path + Math.random()
     })
     const routeList = homeRoutes
-    return {routeList, router, routerKey}
+    const userInfo = LocalCache.getCache("userInfo")
+    // console.log("userinfo", userInfo.username)
+    const username = userInfo.username
+    return {routeList, router, routerKey, username}
   }
 })
 </script>

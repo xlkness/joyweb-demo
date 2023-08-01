@@ -30,22 +30,14 @@ var (
 )
 
 func (d *Dao) tryAddAdminUser() {
-	adminUser, find := d.userList.Get(adminUserName)
-	if !find {
-		doUser := &do.User{
-			Systems: []*do.SystemUserGroup{
-				{"user", true, ""},
-			},
-			UserName:  adminUserName,
-			Password:  adminuserPasswd,
-			Salt:      "sdfs",
-			CreatedAt: time.Now().Format(time.DateTime),
-		}
-
-		adminUser, _ = d.userList.StoreUnique(doUser, doUser.UserName)
+	doUser := &do.User{
+		Systems: []*do.SystemUserGroup{
+			{"user", true, ""},
+		},
+		UserName:  adminUserName,
+		Password:  adminuserPasswd,
+		Salt:      "sdfs",
+		CreatedAt: time.Now().Format(time.DateTime),
 	}
-
-	if adminUser != nil {
-
-	}
+	d.userList.StoreOrReplace(doUser, doUser.UserName)
 }

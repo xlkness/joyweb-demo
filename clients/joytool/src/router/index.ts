@@ -144,21 +144,21 @@ export let homeRoutes = [
       },
     ],
   },
-  // {
-  //   path: "/test1",
-  //   name: "test1",
-  //   component: TestView,
-  //   meta: {
-  //     key: "test1",
-  //     project: "足球",
-  //     name: "test1",
-  //     icon: "User",
-  //   },
-  //   query: {
-  //     project: "足球",
-  //     t: Date.now(),
-  //   }
-  // },
+  {
+    path: "/test1",
+    name: "test1",
+    component: TestView,
+    meta: {
+      key: "test1",
+      project: "足球",
+      name: "测试页面1",
+      icon: "User",
+    },
+    query: {
+      project: "足球",
+      t: Date.now(),
+    }
+  },
   // {
   //   path: "/test2",
   //   name: "test2",

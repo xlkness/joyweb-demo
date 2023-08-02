@@ -187,9 +187,10 @@ import CmdServer from "@/components/gmtool/CmdServer.vue";
 import {ElNotification} from "element-plus";
 import CmdExecute from "@/components/gmtool/CmdExecute.vue";
 import CmdExecuteWithHistory from "@/components/gmtool/CmdExecuteWithHistory.vue";
+import LocalCache from "@/stores/localCache";
 
 export default defineComponent({
-  props: ['project', 'curEnv', 'commandServerList', 'envList', 'likeList', 'permissionList'],
+  props: ['project', 'curEnv', 'commandServerList', 'envList', 'likeList', 'permissionList', 'isAdmin'],
   setup(props) {
 
     // console.log("refresh env view")
@@ -200,19 +201,26 @@ export default defineComponent({
     const likeList = props.likeList
     const permissionList = props.permissionList || []
     const gmServerTableData = ref([])
-
+    const isAdmin = props.isAdmin || false
+    const userInfo = LocalCache.getCache("userInfo")
+    
     // 初始化指令服务器列表
     for (let i=0; i < allCommandServerList.length; i++) {
       for (let j=0; allCommandServerList[i].envs && j < allCommandServerList[i].envs.length; j++) {
+        let node = {
+          "name": allCommandServerList[i].name,
+          "addr": allCommandServerList[i].addr,
+          "desc": allCommandServerList[i].desc,
+          "detail": allCommandServerList[i],
+        }
+        if (isAdmin && curEnv == allCommandServerList[i].envs[j]) {
+          gmServerTableData.value.push(node)
+          continue
+        }
         for (let k=0; k<permissionList.length; k++) {
           if (curEnv == allCommandServerList[i].envs[j] &&
               permissionList[k].command_server == allCommandServerList[i].name) {
-            gmServerTableData.value.push({
-              "name": allCommandServerList[i].name,
-              "addr": allCommandServerList[i].addr,
-              "desc": allCommandServerList[i].desc,
-              "detail": allCommandServerList[i],
-            })
+            gmServerTableData.value.push(node)
             break
           }
         }
@@ -286,7 +294,12 @@ export default defineComponent({
             for (let i=0; i < allCommandServerList.length; i++) {
               let curCmdServer = allCommandServerList[i]
               if (curCmdServer.name == row.name) {
-                dialogData.value.historyRecordList = curCmdServer.exec_history_list
+                for (let j=0;curCmdServer.exec_history_list && j < curCmdServer.exec_history_list.length; j++) {
+                  let curExecHistory = curCmdServer.exec_history_list[j]
+                  if (isAdmin || curExecHistory.request_info.user == userInfo.username) {
+                    dialogData.value.historyRecordList.push(curExecHistory)
+                  }
+                }
                 break;
               }
             }
@@ -340,7 +353,8 @@ export default defineComponent({
     const cmdServerComponent = CmdServer
     const execCommandComponent = CmdExecuteWithHistory
 
-    return {project, curEnv, gmServerTableData, handleOperation, handleClose, dialogData, cmdServerComponent, execCommandComponent, handleLike, handleShowExecCommand}
+    return {project, curEnv, isAdmin, gmServerTableData,
+      handleOperation, handleClose, dialogData, cmdServerComponent, execCommandComponent, handleLike, handleShowExecCommand}
   }
 })
 </script>

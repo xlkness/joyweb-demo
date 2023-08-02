@@ -91,6 +91,7 @@ import {ElNotification} from "element-plus";
 import {Delete} from "@element-plus/icons-vue";
 import CmdExecuteWithHistory from "@/components/gmtool/CmdExecuteWithHistory.vue";
 import {useRouter} from "vue-router";
+import LocalCache from "@/stores/localCache";
 
 export default defineComponent({
   setup() {
@@ -103,23 +104,37 @@ export default defineComponent({
       preExecCommandHistory: {},
     })
 
+    const isAdmin = ref(false)
+
+    const userInfo = LocalCache.getCache("userInfo")
+
     gmtool({project: project}).then((res)=> {
       // 获取到gmtool信息，刷新页面
       var commandServerList = res.payload.command_server_list || []
       var envList = res.payload.env_list || []
+
+      if (res.payload.is_admin) {
+        isAdmin.value = true
+      }
 
       for (let i=0; i<commandServerList.length; i++) {
         if (!commandServerList[i].exec_history_list) {
           continue
         }
         for (let j=0; j<commandServerList[i].exec_history_list.length; j++) {
-          historyRecordList.value.push({
+          let node = {
             index: j,
             cmdServer: commandServerList[i],
             history: commandServerList[i].exec_history_list[j]
-          })
+          }
+          let curCmdServer = commandServerList[i].exec_history_list[j]
+          if (isAdmin.value || curCmdServer.request_info.user == userInfo.username) {
+            historyRecordList.value.push(node)
+          }
         }
       }
+
+
       // console.log("commandServerList", commandServerList, envList)
     }, (err) => {
       console.log("request error:", err)

@@ -100,7 +100,7 @@ func (ctl *Controllers) ExecCommand(ctx *model.MyContext, params *request.ExecCo
 			Project:           params.Project,
 			CommandServerName: params.CommandServerName,
 			Env:               params.Env,
-			User:              "test",
+			User:              ctx.GetUserName(),
 			Date:              time.Now().Format(time.DateTime),
 		},
 		ExecResCode: code,

@@ -77,7 +77,7 @@ export default defineComponent({
       usernameDisabled: dialogUserData.oldData && dialogUserData.oldData.username,
     })
 
-    console.log('old data', dialogUserData.oldData)
+    // console.log('old data', dialogUserData.oldData)
 
     for (let i=0; dialogUserData.oldData.systems && i < dialogUserData.oldData.systems.length; i++) {
       const curSystem = dialogUserData.oldData.systems[i]

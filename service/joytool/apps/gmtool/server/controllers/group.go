@@ -13,11 +13,14 @@ func (ctl *Controllers) PermissionGroupList(ctx *model.MyContext, req *request.P
 		return
 	}
 
+	permissionGroupList := ctl.Db.PermissionGroupList(req.Project)
+
 	permissionList, _ := ctl.Db.GetPermissionGroup(req.Project, userInfo.Group)
 
 	ctx.RespSuccessJson(map[string]interface{}{
-		"permission_list": permissionList,
-		"is_admin":        userInfo.IsAdmin,
+		"permission_list":       permissionList,
+		"permission_group_list": permissionGroupList,
+		"is_admin":              userInfo.IsAdmin,
 	})
 }
 

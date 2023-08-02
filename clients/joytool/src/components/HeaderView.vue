@@ -9,7 +9,7 @@
         </div>
       </el-col>
       <el-col :span="15" :offset="0">
-        <h2 style="margin-top: 22px;color:#41c9c7">创乐汇后台工具管理系统</h2>
+        <h2 style="margin-top: 20px;color:#41c9c7">创乐汇后台工具管理系统</h2>
       </el-col>
       <el-col :span="4" :offset="2">
         <el-row>

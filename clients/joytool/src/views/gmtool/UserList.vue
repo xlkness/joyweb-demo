@@ -5,7 +5,7 @@
              :subsystem="subsystem"
              :subsystemName="subsystemName"
              :subsystemGroups="subsystemGroups"
-             v-if="(permission && componentVisible)"
+             v-else
   >
   </component>
 </template>
@@ -21,16 +21,15 @@ export default defineComponent({
     const useRoute = useRouter()
     const project = useRoute.currentRoute.value.query.project
     const subsystemGroups = ref([])
-    const componentVisible = ref(false)
     const permission = ref(false)
 
     permissionGroupList({project: project}).then((res)=>{
-      if (res.payload.permission_list && res.payload.permission_list.length > 0) {
+      // console.log('permission group list', res.payload)
+      if (res.payload.permission_group_list && res.payload.permission_group_list.length > 0) {
         subsystemGroups.value = []
-        res.payload.permission_list.forEach(function (value, index, obj) {
+        res.payload.permission_group_list.forEach(function (value, index, obj) {
           subsystemGroups.value.push(value.name)
         })
-        componentVisible.value = true
       }
       if (res.payload.is_admin) {
         permission.value = true
@@ -42,7 +41,7 @@ export default defineComponent({
     const RealUserList = UserList
     const subsystem = project + "-gmtool"
     const subsystemName = project + "-GM管理系统"
-    return {permission, project, subsystemGroups, RealUserList, subsystem, subsystemName, componentVisible}
+    return {permission, project, subsystemGroups, RealUserList, subsystem, subsystemName}
   }
 })
 </script>

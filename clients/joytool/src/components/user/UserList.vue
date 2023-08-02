@@ -63,6 +63,7 @@ export default defineComponent({
 
     const userList = ref([])
     listUsers().then((res) => {
+      // console.log('userlist', res.payload)
       userList.value = res.payload
     }, (err) => {
       console.log(err)

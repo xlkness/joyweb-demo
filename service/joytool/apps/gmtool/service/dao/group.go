@@ -19,9 +19,12 @@ func (d *Dao) PermissionGroupList(project string) []*do.PermissionGroupData {
 }
 
 func (d *Dao) GetPermissionGroup(project, group string) (*do.PermissionGroupData, bool) {
+	if group == "" {
+		return &do.PermissionGroupData{}, false
+	}
 	data, find := d.permissionGroupList.Get(project, group)
 	if !find {
-		return nil, false
+		return &do.PermissionGroupData{}, false
 	}
 
 	return data.Data, true

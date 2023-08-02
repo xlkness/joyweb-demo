@@ -17,6 +17,7 @@
             :project="project"
             :likeList="item.likeList"
             :permissionList="item.permissionList"
+            :isAdmin="item.isAdmin"
             v-if="(envTabsValue == item.name)"
         ></component>
         <!--            {{item.content}}-->
@@ -44,31 +45,25 @@ export default defineComponent({
       var commandServerList = res.payload.command_server_list || []
       var envList = res.payload.env_list || []
       var likeList = res.payload.like_list || []
-      console.log("gmtool", res.payload)
+      // console.log("gmtool", res.payload)
       for (let i=0; i<envList.length; i++) {
+        let node = {
+          "title": String(envList[i].name),
+          "name": String(envList[i].name),
+          "content": EnvView,
+          "commandServerList": commandServerList,
+          "envList": envList,
+          "likeList": likeList,
+          "permissionList": res.payload.permission.permissions,
+          "isAdmin": res.payload.is_admin,
+        }
         if (res.payload.is_admin) {
-          envTabs.value.push({
-            "title": String(envList[i].name),
-            "name": String(envList[i].name),
-            "content": EnvView,
-            "commandServerList": commandServerList,
-            "envList": envList,
-            "likeList": likeList,
-            "permissionList": res.payload.permission.permissions,
-          })
+          envTabs.value.push(node)
           continue
         }
         for (let j=0; res.payload.permission && res.payload.permission.permissions && j<res.payload.permission.permissions.length; j++) {
           if (res.payload.permission.permissions[j].env == envList[i].name) {
-            envTabs.value.push({
-              "title": String(envList[i].name),
-              "name": String(envList[i].name),
-              "content": EnvView,
-              "commandServerList": commandServerList,
-              "envList": envList,
-              "likeList": likeList,
-              "permissionList": res.payload.permission.permissions,
-            })
+            envTabs.value.push(node)
             break
           }
         }

@@ -132,15 +132,18 @@ import {Operation} from "@element-plus/icons-vue";
 import CmdExecute from "@/components/gmtool/CmdExecute.vue";
 import CmdExecuteWithHistory from "./CmdExecuteWithHistory.vue";
 import { likeCommand } from "@/requests/gmtool";
+import LocalCache from "@/stores/localCache";
 
 export default defineComponent({
   components: {Operation},
-  props: ['project', 'curEnv', 'commandserver', 'commandlist',],
+  props: ['project', 'curEnv', 'commandserver', 'commandlist', 'isAdmin'],
   setup(props) {
     const project = props.project
     const curEnv = props.curEnv
     const commandserver = props.commandserver
     const commandlist = props.commandlist
+    const isAdmin = props.isAdmin || false
+    const userInfo = LocalCache.getCache("userInfo")
 
     const executeCommandDialogData = ref({
       execCommand: {},
@@ -166,8 +169,8 @@ export default defineComponent({
       for (let i=0; i < commandserver.detail.exec_history_list.length; i++) {
         let curHistory = commandserver.detail.exec_history_list[i]
         // console.log(curHistory, commandserver)
-        if (curHistory.request_info.base_req_params.name == row.name &&
-        curHistory.request_info.env == commandserver.name) {
+        if (isAdmin || (curHistory.request_info.base_req_params.name == row.name &&
+        curHistory.request_info.env == commandserver.name && curHistory.request_info.user == userInfo.username)) {
           historyDialogData.value.historyRecordList.push(curHistory)
         }
       }

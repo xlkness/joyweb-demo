@@ -24,6 +24,10 @@ func (d *Dao) GetUserInfo(userName, system string) (*doUser.User, bool) {
 		}
 	}
 
+	if userName == "admin" {
+		curSystemData.IsAdmin = true
+	}
+
 	newUserData := dbData.Data.Copy()
 	newUserData.Systems = []*doUser.SystemUserGroup{curSystemData}
 	return newUserData, find

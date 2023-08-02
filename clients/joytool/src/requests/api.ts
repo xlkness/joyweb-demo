@@ -2,6 +2,7 @@ import axios from 'axios'
 import {ElMessageBox} from "element-plus";
 import LocalCache from "@/stores/localCache";
 import {useRouter} from "vue-router";
+import ExpireCache from "@/stores/expireCache";
 
 // 创建axios实例
 const userService=axios.create({
@@ -31,8 +32,9 @@ const gmtoolService=axios.create({
 
 const reqInterceptor = (config)=>{
     config.headers=config.headers || {}
-    if(localStorage.getItem('token')){
-        config.headers["x-token"]=LocalCache.getCache('token') || ""
+    const token = ExpireCache.getCache('token')
+    if(token){
+        config.headers["x-token"]=token || ""
     } else {
         console.log("not found local storage token")
     }

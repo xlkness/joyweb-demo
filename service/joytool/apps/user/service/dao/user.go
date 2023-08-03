@@ -91,6 +91,8 @@ func (d *Dao) CreateUser(userData *request.CreateUser) (*doUser.User, error) {
 }
 
 func (d *Dao) EditUser(newData *request.CreateUser) (*doUser.User, error) {
+	fmt.Printf("1receive edit user:%+v\n", newData.BaseInfo)
+
 	oldData, find := d.userList.Get(newData.BaseInfo.UserName)
 	if !find {
 		return nil, fmt.Errorf("数据库没有找到数据")
@@ -108,11 +110,10 @@ func (d *Dao) EditUser(newData *request.CreateUser) (*doUser.User, error) {
 		oldData.Data.Systems = append(oldData.Data.Systems, newData.GroupList[0])
 	}
 
+Next:
 	if newData.BaseInfo.PassWord != "" {
 		oldData.Data.Password = newData.BaseInfo.PassWord
 	}
-
-Next:
 	oldData, _ = d.userList.Update(oldData.Data, oldData.Data.UserName)
 
 	return oldData.Data, nil

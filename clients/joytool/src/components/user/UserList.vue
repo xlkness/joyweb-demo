@@ -8,21 +8,21 @@
         <el-table :data="userList" table-layout="auto" stripe style="width: 98vh;height: 60vh">
           <el-table-column prop="username" label="名 字">
           </el-table-column>
-          <el-table-column prop="isAdminStr" label="是否管理员">
+          <el-table-column prop="is_admin_str" label="是否管理员">
           </el-table-column>
           <el-table-column prop="group" label="所属组">
           </el-table-column>
-          <el-table-column prop="createdAt" label="创建时间">
+          <el-table-column prop="created_at" label="创建时间">
           </el-table-column>
           <el-table-column prop="func" label="功 能">
             <template #default="scope">
-              <el-button @click="handleEditUser(scope.$index, scope.row)" size="large" type="success" :disabled="scope.row.isAdmin && !scope.row.isMyInfo">
+              <el-button @click="handleEditUser(scope.$index, scope.row)" size="large" type="success" :disabled="scope.row.is_admin && !scope.row.io_my_info">
                 <el-icon style="vertical-align: middle">
                   <Operation/>
                 </el-icon>
                 <span>编辑</span>
               </el-button>
-              <el-button  @click="handleDeleteUser(scope.$index, scope.row)" size="large" type="danger" :disabled="scope.row.isAdmin">
+              <el-button  @click="handleDeleteUser(scope.$index, scope.row)" size="large" type="danger" :disabled="scope.row.is_admin">
                 <el-icon style="vertical-align: middle">
                   <Operation/>
                 </el-icon>
@@ -72,16 +72,16 @@ export default defineComponent({
       // console.log('userlist', res.payload)
       for (let i=0; i<res.payload.length; i++) {
         const curUser = res.payload[i]
-        const row = {
-          username: curUser.username,
-          isAdmin: curUser.is_admin,
-          isAdminStr : curUser.is_admin ? "是" : "否",
-          group: curUser.group,
-          isMyInfo: userInfo.username == curUser.username,
-          createdAt: curUser.created_at,
-        }
+        // const row = {
+        //   username: curUser.username,
+        //   isAdmin: curUser.is_admin,
+        //   isAdminStr : curUser.is_admin ? "是" : "否",
+        //   group: curUser.group,
+        //   isMyInfo: userInfo.username == curUser.username,
+        //   createdAt: curUser.created_at,
+        // }
         // console.log("row", row)
-        userList.value.push(row)
+        userList.value.push(curUser)
       }
     }, (err) => {
       console.log(err)

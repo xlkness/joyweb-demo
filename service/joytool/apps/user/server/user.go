@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"joytool/apps/user/api_user"
 	"joytool/apps/user/model"
+	doUser "joytool/apps/user/model/do"
 	"joytool/apps/user/model/request"
+	"joytool/apps/user/model/response"
 	"joytool/lib/token"
 	"log"
 	"time"
@@ -16,25 +18,25 @@ func (s *Server) CreateUser(ctx *model.MyContext, userData *request.CreateUser) 
 		ctx.RespSuccessMessage(err.Error())
 		return
 	}
-	ctx.RespSuccessJson(doUser)
+	ctx.RespSuccessJson(userInfoDo2Dto(ctx, doUser, userData.GroupList[0].Name))
 }
 
 func (s *Server) EditUser(ctx *model.MyContext, userData *request.CreateUser) {
 	doUser, err := s.svc.Dao.EditUser(userData)
 	if err != nil {
-		ctx.RespSuccessMessage(err.Error())
+		ctx.RespFailMessage(301, err.Error())
 		return
 	}
-	ctx.RespSuccessJson(doUser)
+	ctx.RespSuccessJson(userInfoDo2Dto(ctx, doUser, userData.GroupList[0].Name))
 }
 
 func (s *Server) DeleteUser(ctx *model.MyContext, deleteData *request.DeleteUser) {
-	doUser, err := s.svc.Dao.DeleteUser(deleteData)
+	_, err := s.svc.Dao.DeleteUser(deleteData)
 	if err != nil {
 		ctx.RespSuccessMessage(err.Error())
 		return
 	}
-	ctx.RespSuccessJson(doUser)
+	ctx.RespSuccessMessage("ok")
 }
 
 const (
@@ -90,10 +92,47 @@ func (s *Server) Login(ctx *model.MyContext, loginData *request.LoginData) {
 
 func (s *Server) ListUsers(ctx *model.MyContext, params *request.ListUser) {
 	list, _ := s.svc.Dao.UserListBySystem(params.System)
+	username := ctx.GetUserName()
+	for _, v := range list {
+		if v.UserName == username {
+			v.IsMyInfo = true
+		}
+		if v.IsAdmin {
+			v.IsAdminStr = "是"
+		} else {
+			v.IsAdminStr = "否"
+		}
+	}
 	ctx.RespSuccessJson(list)
 }
 
 func (s *Server) Logout(ctx *model.MyContext) {
 	fmt.Printf("user logout:%v\n", ctx.GetUserName())
 	ctx.RespSuccessMessage("ok")
+}
+
+func userInfoDo2Dto(ctx *model.MyContext, do *doUser.User, system string) *response.UserInSystem {
+	dto := &response.UserInSystem{
+		UserName:  do.UserName,
+		CreatedAt: do.CreatedAt,
+	}
+	for _, v := range do.Systems {
+		if v.Name == system {
+			dto.IsAdmin = v.IsAdmin
+			dto.Group = v.Group
+			break
+		}
+	}
+
+	username := ctx.GetUserName()
+	if dto.UserName == username {
+		dto.IsMyInfo = true
+	}
+	if dto.IsAdmin {
+		dto.IsAdminStr = "是"
+	} else {
+		dto.IsAdminStr = "否"
+	}
+
+	return dto
 }

@@ -42,7 +42,13 @@
         <!--              >-->
         <!--              </el-tree>-->
         <el-radio-group v-model="dialogAddFormData.group" size="large" :disabled="dialogAddFormData.isAdmin == true">
-          <el-radio-button v-for="item in subsystemGroups" :label="item"></el-radio-button>
+          <el-radio-button>
+            <template #default>
+              无
+            </template>
+          </el-radio-button>
+          <el-radio-button v-for="item in subsystemGroups" :label="item">
+          </el-radio-button>
         </el-radio-group>
       </el-form-item>
       <el-form-item>
@@ -71,9 +77,9 @@ export default defineComponent({
     const dialogAddFormRef =  ref<FormInstance>()
     const dialogAddFormData = ref({
       username: dialogUserData.oldData.username || '',
-      passwd: dialogUserData.oldData.password || '',
+      passwd: '',
       isAdmin: false,
-      group: '',
+      group: dialogUserData.oldData.group || '',
       usernameDisabled: dialogUserData.oldData && dialogUserData.oldData.username,
     })
 

@@ -1,22 +1,20 @@
 <template>
   <div>
-    <el-row :gutter="5" style="border-bottom: dashed 1px gray">
-      <el-col :span="3">
+    <el-row :gutter="5" style="border-bottom: dashed 1px gray;display: flex;justify-content: center;align-items: center">
+      <el-col :span="3" style="display: flex;justify-content: center">
         <div>
           <el-icon color="#41c9c7" size="8vh" style="display: flex;align-items: center">
             <HomeFilled />
           </el-icon>
         </div>
       </el-col>
-      <el-col :span="15" :offset="0">
-        <h2 style="margin-top: 20px;color:#41c9c7">创乐汇后台工具管理系统</h2>
+      <el-col :span="15" :offset="0" style="display: flex;justify-content: center;align-items: center">
+        <span style="font-size:55px; font-weight: bold; color: #445ebf">创 乐 汇</span> <span style="font-size:50px; color:#41c9c7">后 台 工 具 管 理 系 统</span>
       </el-col>
       <el-col :span="4" :offset="2">
-        <el-row>
-          <el-col :span="8" :offset="0">
-            <el-avatar :icon="UserFilled" :src="defaultAvatar" :size="80" style="float: right"></el-avatar>
-          </el-col>
-          <el-col class="avatar" :span="12">
+        <el-row style="display: flex;justify-content: flex-end;">
+          <el-col class="avatar" :span="24" style="display: flex;justify-content: flex-end">
+            <el-avatar :icon="UserFilled" :src="defaultAvatar" :size="80" style="margin-right: 5px"></el-avatar>
             <el-dropdown class="dropdown" :hide-on-click="false" size="large" @command="handleClick">
               <span class="avatar-username">
                 {{username}}<el-icon class="el-icon--right"><arrow-down/></el-icon>
@@ -29,12 +27,6 @@
               </template>
             </el-dropdown>
           </el-col>
-<!--          <el-col class="username" :span="11">-->
-<!--            <span>{{username}}</span>-->
-<!--          </el-col>-->
-<!--          <el-col :span="8">-->
-
-<!--          </el-col>-->
         </el-row>
       </el-col>
     </el-row>

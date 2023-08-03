@@ -28,7 +28,7 @@ const getGMToolChildrenMenuItems = (enProject: string, project: string) => {
       meta: {
         "key": enProject + "/gmtool/operation",
         "name": "指令服操作",
-        "icon": "Tools",
+        "icon": "Operation",
       },
       component: EnvViews,
       query: query(),
@@ -38,7 +38,7 @@ const getGMToolChildrenMenuItems = (enProject: string, project: string) => {
       meta: {
         key: enProject + "/gmtool/environments",
         "name": "环境管理",
-        "icon": "Tools",
+        "icon": "DocumentCopy",
       },
       component: EditEnvListView,
       query: query(),
@@ -48,7 +48,7 @@ const getGMToolChildrenMenuItems = (enProject: string, project: string) => {
       meta: {
         key: enProject + "/gmtool/command_server_list",
         "name": "指令服管理",
-        "icon": "Tools",
+        "icon": "Document",
       },
       component: EditCmdServerListView,
       query: query(),
@@ -58,7 +58,7 @@ const getGMToolChildrenMenuItems = (enProject: string, project: string) => {
       meta: {
         key: enProject + "/gmtool/like_list",
         "name": "收藏管理",
-        "icon": "Tools",
+        "icon": "Collection",
       },
       component: EditLikeList,
       query: query(),
@@ -68,7 +68,7 @@ const getGMToolChildrenMenuItems = (enProject: string, project: string) => {
       meta: {
         key: enProject + "/gmtool/history_list",
         "name": "执行历史管理",
-        "icon": "Tools",
+        "icon": "List",
       },
       component: EditExecHistoryList,
       query: query(),
@@ -78,7 +78,7 @@ const getGMToolChildrenMenuItems = (enProject: string, project: string) => {
       meta: {
         key: enProject + "/gmtool/permission_group_list",
         "name": "权限组管理",
-        "icon": "Tools",
+        "icon": "TurnOff",
       },
       component: PermissionGroupList,
       query: query(),
@@ -88,7 +88,7 @@ const getGMToolChildrenMenuItems = (enProject: string, project: string) => {
       meta: {
         key: enProject + "/gmtool/user_list",
         "name": "用户列表",
-        "icon": "Tools",
+        "icon": "Avatar",
       },
       component: UserList,
       query: query(),
@@ -96,13 +96,13 @@ const getGMToolChildrenMenuItems = (enProject: string, project: string) => {
   ]
 }
 
-export let homeRoutes = [
+export const homeRoutes = [
   {
     path: "/gmtool",
     meta: {
       "key": "/gmtool",
       'name': 'GM管理系统',
-      'icon': "Tools",
+      'icon': "Menu",
     },
     children: [
       {
@@ -110,7 +110,7 @@ export let homeRoutes = [
         meta: {
           "key": "/gmtool/football",
           "name": "足球项目",
-          "icon": "Tools",
+          "icon": "Football",
         },
         children: getGMToolChildrenMenuItems("football", "足球"),
       },
@@ -119,7 +119,7 @@ export let homeRoutes = [
         meta: {
           "key": "/gmtool/sim",
           "name": "SIM项目",
-          "icon": "Tools",
+          "icon": "TrophyBase",
         },
         children: getGMToolChildrenMenuItems("sim", "SIM"),
       },
@@ -130,7 +130,7 @@ export let homeRoutes = [
     meta: {
       "key": "/users",
       'name': '用户管理',
-      'icon': "Tools",
+      'icon': "Avatar",
     },
     children: [
       {
@@ -144,21 +144,21 @@ export let homeRoutes = [
       },
     ],
   },
-  {
-    path: "/test1",
-    name: "test1",
-    component: TestView,
-    meta: {
-      key: "test1",
-      project: "足球",
-      name: "测试页面1",
-      icon: "User",
-    },
-    query: {
-      project: "足球",
-      t: Date.now(),
-    }
-  },
+  // {
+  //   path: "/test1",
+  //   name: "test1",
+  //   component: TestView,
+  //   meta: {
+  //     key: "test1",
+  //     project: "足球",
+  //     name: "测试页面1",
+  //     icon: "User",
+  //   },
+  //   query: {
+  //     project: "足球",
+  //     t: Date.now(),
+  //   }
+  // },
   // {
   //   path: "/test2",
   //   name: "test2",
@@ -207,9 +207,9 @@ router.beforeEach((to, from, next) => {
   if (to.path == "/login") {
     next()
   } else {
-    let token = ExpireCache.getCache("token")
+    const token = ExpireCache.getCache("token")
     if (!token) {
-      console.log("token is expired")
+      // console.log("token is expired")
       next('/login')
     } else {
       console.log("token is valid")

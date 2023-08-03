@@ -1,5 +1,7 @@
 import { createApp, createVNode  } from 'vue'
 import App from './App.vue'
+import "./style/index.scss";
+
 import router from './router'
 import { createPinia } from 'pinia'
 import "element-plus/theme-chalk/el-notification.css"
@@ -14,7 +16,6 @@ import "element-plus/theme-chalk/el-message-box.css"
 
 // 导入icon图标
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-import EnvView from "@/views/gmtool_old/EnvView.vue";
 
 const app = createApp(App)
 

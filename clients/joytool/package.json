@@ -19,6 +19,7 @@
     "axios": "^1.4.0",
     "element-plus": "^2.3.4",
     "pinia": "^2.0.36",
+    "unplugin-icons": "^0.16.5",
     "vue": "^3.3.2",
     "vue-router": "^4.2.0"
   },

@@ -1,1 +1,0 @@
-{"16":{"ID":16,"Data":{"project":"足球","user":"test","id":16,"command":{"base_req_params":{"name":"/gm/add_vip_exp","desc":"","fields":[{"name":"role_id","value":"124"},{"name":"exp","value":"1"},{"name":"gm_id","value":"sdf"}]},"project":"足球","command_server_name":"服务器test3","env":"内网","user":"test","date":"2023-07-21 11:58:37"}}}}

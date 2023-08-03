@@ -13,6 +13,13 @@ const pathSrc = path.resolve(__dirname, 'src')
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: "@use './src/style/element/index.scss' as *;",
+      }
+    }
+  },
   plugins: [
       vue(),
       AutoImport({
@@ -51,17 +58,17 @@ export default defineConfig({
   server: {
     open: false,  //启动项目后打开浏览器
     port: 8080,   //端口
-    host: '192.168.1.104',
+    host: '192.168.1.110',
     https: false,
     lintOnSave: false,
     proxy: {
         '/user': {
-            target: 'http://192.168.1.104:9000/',  //API服务地址
+            target: 'http://192.168.1.110:9000/',  //API服务地址
             changeOrigin: true,             //开启跨域
             rewrite: (path) => path.replace(/^\/user/, '')
         },
         '/gmtoolapi': {
-            target: 'http://192.168.1.104:9001/',  //API服务地址
+            target: 'http://192.168.1.110:9001/',  //API服务地址
             changeOrigin: true,             //开启跨域
             rewrite: (path) => path.replace(/^\/gmtoolapi/, '')
         },

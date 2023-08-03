@@ -101,90 +101,49 @@ export default defineComponent({
 <style scoped>
 .sub-menu1-title {
   font-size: 35px !important;
-  font-family: YouYuan,  Microsoft YaHei, sans-serif;
 }
-
-.sub-menu1:hover {
-  background-color: #445ebf !important;
-}
-
-:deep() {
-  .sub-menu1:hover .el-sub-menu__title {
-    background-color: #445ebf !important;
-  }
-}
-
-
-.sub-menu2 {
-  font-size: 30px;
-  font-family: YouYuan,  Microsoft YaHei, sans-serif;
-}
-
-.menu-item1 {
-  font-size: 35px;
-  font-family: YouYuan,  Microsoft YaHei, sans-serif;
-}
-
-.menu-item2 {
-  font-size: 30px;
-  font-family: YouYuan,  Microsoft YaHei, sans-serif;
-}
-
-.menu-item3 {
-  font-size: 25px;
-  font-family: YouYuan,  Microsoft YaHei, sans-serif;
-}
-
 </style>
 
 <style lang="scss" scoped>
 
 .el-header {
-  //height: 10vh;
+  height: 8vh;
   background-color: white;
-  margin-bottom: 50px;
+  margin-bottom: 10px;
 }
 
-/*:deep(.el-menu) {*/
-/*  font-size: 100px;*/
-/*  font-family: YouYuan,Arial,Microsoft YaHei,sans-serif !important;*/
-/*}*/
-
-/*.home-menu .el-menu {*/
-/*  font-size: 100px;*/
-/*  font-family: YouYuan,Arial,Microsoft YaHei,sans-serif !important;*/
-/*}*/
+.el-aside {
+  height: 90vh;
+  border-right: 1px dashed gray;
+}
 
 :deep() {
-  .el-menu {
-    font-family: YouYuan,Arial,Microsoft YaHei,sans-serif !important;
-  }
   .el-sub-menu__title {
-    font-family: YouYuan,Arial,Microsoft YaHei,sans-serif !important;
+    //font-family: "paopao",serif;
     font-size: 30px !important;
     background-color: #ffffff !important;
   }
   .el-sub-menu__title:hover {
-    font-family: YouYuan,Arial,Microsoft YaHei,sans-serif !important;
+    //font-family: "paopao",serif;
     outline: 0 !important;
     color: white !important;
     //border-radius: 5%;
     background-color: #445ebf !important;
   }
   .el-menu-item {
-    font-family: YouYuan,Arial,Microsoft YaHei,sans-serif !important;
+    //font-family: "paopao",serif;
     font-size: 30px;
     background-color: #ffffff !important;
   }
   .el-menu-item:hover {
-    font-family: YouYuan,Arial,Microsoft YaHei,sans-serif !important;
+    //font-family: "paopao",serif;
     outline: 0 !important;
     color: white !important;
     //border-radius: 6%;
     background-color: #445ebf !important;
   }
   .el-menu-item.is-active {
-    font-family: YouYuan,Arial,Microsoft YaHei,sans-serif !important;
+    //font-family: "paopao",serif;
     color: #1890ff !important;
   }
 }

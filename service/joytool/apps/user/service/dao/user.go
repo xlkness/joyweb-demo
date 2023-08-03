@@ -108,6 +108,10 @@ func (d *Dao) EditUser(newData *request.CreateUser) (*doUser.User, error) {
 		oldData.Data.Systems = append(oldData.Data.Systems, newData.GroupList[0])
 	}
 
+	if newData.BaseInfo.PassWord != "" {
+		oldData.Data.Password = newData.BaseInfo.PassWord
+	}
+
 Next:
 	oldData, _ = d.userList.Update(oldData.Data, oldData.Data.UserName)
 

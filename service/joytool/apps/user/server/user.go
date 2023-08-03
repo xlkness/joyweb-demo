@@ -88,31 +88,8 @@ func (s *Server) Login(ctx *model.MyContext, loginData *request.LoginData) {
 	ctx.RespSuccessJson(resp)
 }
 
-func (s *Server) ListUsers(ctx *model.MyContext) {
-	//user1 := &do.User{
-	//	Systems: []*do.SystemUserGroup{
-	//		{"user", true, ""},
-	//		{"gmtool", true, ""},
-	//	},
-	//	UserName:  "chenshun",
-	//	Password:  "chenshun",
-	//	Salt:      "",
-	//	CreatedAt: time.Now().Add(-time.Hour * 24).Format(time.DateTime),
-	//}
-	//user2 := &do.User{
-	//	Systems: []*do.SystemUserGroup{
-	//		{"user", false, ""},
-	//		{"gmtool", false, "策划"},
-	//	},
-	//	UserName:  "wangcong",
-	//	Password:  "wangcong",
-	//	Salt:      "",
-	//	CreatedAt: time.Now().Add(-time.Hour * 24).Format(time.DateTime),
-	//}
-	//userList := []*do.User{user1, user2}
-
-	list, _ := s.svc.Dao.UserList()
-
+func (s *Server) ListUsers(ctx *model.MyContext, params *request.ListUser) {
+	list, _ := s.svc.Dao.UserListBySystem(params.System)
 	ctx.RespSuccessJson(list)
 }
 

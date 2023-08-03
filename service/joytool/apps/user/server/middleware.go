@@ -36,8 +36,8 @@ func jwtMiddleWare() func(ctx *model.MyContext) {
 		}
 
 		checkedClaims := checkedToken.Claims.(*token.RegisteredTokenClaims)
-		fmt.Printf("valid token(%v) pass, user:%v,  expire:%v, issuer:%v\n",
-			tokenStr, checkedClaims.User, checkedClaims.ExpiresAt, checkedClaims.Issuer)
+		fmt.Printf("path(%v) valid token(%v) pass, user:%v,  expire:%v, issuer:%v\n",
+			c.Request.URL.Path, tokenStr, checkedClaims.User, checkedClaims.ExpiresAt, checkedClaims.Issuer)
 
 		// 校验token是否白名单
 		c.Set("claims", checkedClaims)

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	doUser "joytool/apps/user/model/do"
 	"joytool/apps/user/model/request"
+	"joytool/apps/user/model/response"
 	"time"
 )
 
@@ -41,6 +42,33 @@ func (d *Dao) UserList() ([]*doUser.User, error) {
 			continue
 		}
 		list1 = append(list1, v.Data)
+	}
+	return list1, nil
+}
+
+func (d *Dao) UserListBySystem(system string) ([]*response.UserInSystem, error) {
+	list := d.userList.GetList()
+	list1 := make([]*response.UserInSystem, 0, len(list))
+	for _, v := range list {
+		if v.Data.UserName == "admin" {
+			continue
+		}
+		elem := &response.UserInSystem{
+			UserName:  v.Data.UserName,
+			IsAdmin:   false,
+			Group:     "",
+			CreatedAt: v.Data.CreatedAt,
+		}
+
+		for _, systemInfo := range v.Data.Systems {
+			if systemInfo.Name == system {
+				elem.IsAdmin = systemInfo.IsAdmin
+				elem.Group = systemInfo.Group
+				break
+			}
+		}
+
+		list1 = append(list1, elem)
 	}
 	return list1, nil
 }

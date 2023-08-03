@@ -135,7 +135,7 @@ func (d *Dao) LoginVerify(userData *request.LoginData) (*doUser.User, bool, erro
 	}
 
 	if do.Data.Password != userData.BaseInfo.PassWord {
-		return nil, false, nil
+		return nil, false, fmt.Errorf("用户名或密码错误！")
 	}
 
 	return do.Data, true, nil

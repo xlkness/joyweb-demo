@@ -14,7 +14,7 @@
       <el-form-item
           label="密码"
           prop="passwd"
-          :rules="{required: (dialogUserData.oldData.username == ''), message: '必填', trigger: 'blur'}"
+          :rules="{required: dialogUserData.oldData.username ? false : true, message: '必填', trigger: 'blur'}"
       >
         <el-input type="password" show-password v-model="dialogAddFormData.passwd"></el-input>
       </el-form-item>

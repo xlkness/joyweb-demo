@@ -16,7 +16,7 @@
           </el-table-column>
           <el-table-column prop="func" label="功 能">
             <template #default="scope">
-              <el-button @click="handleEditUser(scope.$index, scope.row)" size="large" type="success" :disabled="scope.row.is_admin && !scope.row.io_my_info">
+              <el-button @click="handleEditUser(scope.$index, scope.row)" size="large" type="success" :disabled="scope.row.is_admin && !scope.row.is_my_info">
                 <el-icon style="vertical-align: middle">
                   <Operation/>
                 </el-icon>

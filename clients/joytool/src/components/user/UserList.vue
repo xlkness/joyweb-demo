@@ -10,6 +10,8 @@
           </el-table-column>
           <el-table-column prop="isAdminStr" label="是否管理员">
           </el-table-column>
+          <el-table-column prop="group" label="所属组">
+          </el-table-column>
           <el-table-column prop="createdAt" label="创建时间">
           </el-table-column>
           <el-table-column prop="func" label="功 能">

@@ -5,20 +5,22 @@
         <el-button @click="handleAddUser" size="large" type="primary">添加用户</el-button>
       </el-header>
       <el-main>
-        <el-table :data="userList" :default-sort="{prop:'index', order: 'ascending'}"  table-layout="auto" stripe style="width: 98vh;height: 60vh">
+        <el-table :data="userList" table-layout="auto" stripe style="width: 98vh;height: 60vh">
           <el-table-column prop="username" label="名 字">
           </el-table-column>
-          <el-table-column prop="created_at" label="创建时间">
+          <el-table-column prop="isAdminStr" label="是否管理员">
+          </el-table-column>
+          <el-table-column prop="createdAt" label="创建时间">
           </el-table-column>
           <el-table-column prop="func" label="功 能">
             <template #default="scope">
-              <el-button @click="handleEditUser(scope.$index, scope.row)" size="large" type="success">
+              <el-button @click="handleEditUser(scope.$index, scope.row)" size="large" type="success" :disabled="scope.row.isAdmin && !scope.row.isMyInfo">
                 <el-icon style="vertical-align: middle">
                   <Operation/>
                 </el-icon>
                 <span>编辑</span>
               </el-button>
-              <el-button  @click="handleDeleteUser(scope.$index, scope.row)" size="large" type="danger">
+              <el-button  @click="handleDeleteUser(scope.$index, scope.row)" size="large" type="danger" :disabled="scope.row.isAdmin">
                 <el-icon style="vertical-align: middle">
                   <Operation/>
                 </el-icon>
@@ -49,6 +51,7 @@ import {createUser, deleteUser, listUsers} from "@/requests/user";
 import {ElNotification, FormInstance} from "element-plus";
 import {addEnv} from "@/requests/gmtool";
 import OperateUser from "@/components/user/OperateUser.vue";
+import LocalCache from "@/stores/localCache";
 
 export default defineComponent({
   props: ['subsystem', 'subsystemName', 'subsystemGroups'],
@@ -60,11 +63,24 @@ export default defineComponent({
     // console.log("sub system:", subsystem, props.subsystem)
     // console.log("sub system name:", subsystemName, props.subsystemName)
     // console.log("groups:", subsystemGroups, props.subsystemGroups,)
+    const userInfo = LocalCache.getCache("userInfo")
 
     const userList = ref([])
-    listUsers().then((res) => {
+    listUsers({system: subsystem}).then((res) => {
       // console.log('userlist', res.payload)
-      userList.value = res.payload
+      for (let i=0; i<res.payload.length; i++) {
+        const curUser = res.payload[i]
+        const row = {
+          username: curUser.username,
+          isAdmin: curUser.is_admin,
+          isAdminStr : curUser.is_admin ? "是" : "否",
+          group: curUser.group,
+          isMyInfo: userInfo.username == curUser.username,
+          createdAt: curUser.created_at,
+        }
+        // console.log("row", row)
+        userList.value.push(row)
+      }
     }, (err) => {
       console.log(err)
     })

@@ -48,10 +48,11 @@ export function deleteUser(data: deleteUserData){
     })
 }
 
-export function listUsers(){
+export function listUsers(data){
     return service.user({
         url: "/listusers",
         method: "get",
+        params: data
     })
 }
 

@@ -19,3 +19,7 @@ type LoginData struct {
 type DeleteUser struct {
 	UserName string `json:"username"`
 }
+
+type ListUser struct {
+	System string `json:"system"`
+}
